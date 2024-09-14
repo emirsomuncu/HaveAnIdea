@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Manage Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        .navbar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 10px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            color: #f8f9fa;
+            margin-bottom: 0px;
+            font-size: 25px;
+            margin-top: 20px;
+        }
+
+        .navbar a {
+            padding: 5px 10px;
+            text-decoration: none;
+            font-size: 17px;
+            color: #f8f9fa;
+            display: block;
+            text-align: center;
+            margin-bottom: 50px;
+            margin-top: 20px;
+        }
+
+        .main-content {
+            margin-left: 210px;
+            padding: 20px;
+        }
+
+        .card {
+            border-radius: 10px;
+        }
+
+        .table thead {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        .card-header.bg-dark {
+            background-color: #343a40 !important;
+        }
+
+        .special {
+            background-color: #a80224;
+        }
+
+        .special:hover {
+            background-color: #fd0434 !important;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a th:href="@{/admin/home}"> <h2> Admin Panel</h2> </a>
+    <a th:href="@{/admin/manage}">Manage</a>
+    <a th:href="@{/admin/admin-register}">Register Admin</a>
+    <a th:href="@{/user/home}">User Home Page</a>
+    <a class="special" th:href="@{/logout}">Logout</a>
+</div>
+
+<div class="main-content">
+    <div class="card shadow-sm">
+        <div class="card-header text-center bg-dark text-white">
+            <h4>MANAGE USERS, POSTS, COMMENTS</h4>
+        </div>
+        <div>
+            <form action="#" th:action="@{/admin/manage}" method="get">
+                <input type="text" name="name" placeholder="Search By Username" th:value="${name}">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">User Id</th>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">User Role(s)</th>
+                    <th scope="col">Operations</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="users : ${getAllUserResponses}">
+                    <th scope="row" th:text="${users.id}"></th>
+                    <td th:text="${users.username}"></td>
+                    <td th:text="${users.email}"></td>
+                    <td th:text="${users.role}"></td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-danger btn-sm btn-custom me-1" th:href="@{/admin/delete-user(id=${users.id})}">Delete</a>
+                            <a class="btn btn-info btn-sm btn-custom me-1" th:href="@{/admin/view-desired-user-post(id=${users.id})}">View Posts</a>
+                            <a class="btn btn-info btn-sm btn-custom" th:href="@{/admin/view-desired-user-comment(id=${users.id})}">View Comments</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

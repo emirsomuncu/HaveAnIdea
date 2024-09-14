@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home / I Have An Idea</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        .navbar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 10px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            color: #f8f9fa;
+            margin-bottom: 0px;
+            font-size: 25px;
+            margin-top: 20px;
+        }
+
+        .navbar a {
+            padding: 5px 10px;
+            text-decoration: none;
+            font-size: 17px;
+            color: #f8f9fa;
+            display: block;
+            text-align: center;
+            margin-bottom: 50px;
+            margin-top: 20px;
+        }
+
+        .main-content {
+            margin-left: 210px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .post-container {
+            position: relative;
+            background-color: #fff;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .post-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .post-text {
+            padding-top: 15px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .post-actions {
+            padding-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        .post-actions .like-btn {
+            display: flex;
+            text-decoration: none;
+            align-items: center;
+        }
+
+        .post-actions .like-btn svg {
+            margin-right: 5px;
+        }
+
+        .post-actions .comment-btn {
+            display: flex;
+            text-decoration: none;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .post-actions .comment-btn svg {
+            margin-right: 5px;
+        }
+
+        .special {
+            background-color: #a80224;
+        }
+
+        .special:hover {
+            background-color: #fd0434 !important;
+        }
+
+        .post-header svg {
+            width: 30px;
+            height: 24px;
+            margin-right: 5px;
+        }
+
+        .delete-btn {
+            text-decoration: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #ff0015;
+            color: #f8f9fa;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        a span {
+            color: inherit;
+        }
+
+        a:hover span {
+            color: black;
+            text-decoration: underline;
+        }
+
+        .like-count {
+            font-size: 16px;
+            color: #333;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a th:href="@{/user/home}"> <h2> Home Page</h2> </a>
+    <a th:href="@{/user/create-post}">Create Post</a>
+    <a th:href="@{/user/search-user}">Search User</a>
+    <a th:href="@{/user/profile(userId= ${currentUser.get().id})}">Profile</a>
+    <a th:href="@{/user/contacts}">Contacts</a>
+    <div sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/admin/home}">Admin Page</a>
+    </div>
+    <a class="special" th:href="@{/logout}">Logout</a>
+</div>
+
+<div class="main-content">
+    <th:block th:each="posts : ${getAllPostsResponses}">
+        <div class="post-container">
+            <div th:if="${posts.userId} == ${currentUser.get().id}">
+                <a th:href="@{/user/delete-post(id = ${posts.id})}" class="delete-btn">Delete</a>
+            </div>
+
+            <div class="post-header">
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>
+                    <a th:href="@{/user/profile(userId = ${posts.userId})}"> <span th:text="${posts.userUsername}"></span> </a>
+                    <span th:text="'( Posted at : ' + ${posts.createdAt} + ' )' " > </span>
+                </span>
+            </div>
+            <div class="post-text" th:text=" 'Topic : '  + ${posts.title}" ></div>
+            <div class="post-text" th:text="${posts.text}" ></div>
+            <div class="post-actions">
+                <a th:href="@{/user/post-likes(postId= ${posts.id})}" class="like-btn" >
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#1da1f2"/>
+                    </svg>
+                    Like
+                </a>
+                <span class="like-count" th:text="'(' + ${postLikeCounts[posts.id]} + ')' "></span>
+                <div th:if="${currentUser.get().id} == ${posts.userId}">
+                    <a th:href="@{/user/{postId}/likes(postId=${posts.id})}"> <span> See Likes </span> </a>
+                </div>
+                <a class="comment-btn" th:href="@{/user/view-comments(id = ${posts.id})}">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M21.99 15.84C21.86 15.19 20.89 15 20.14 15H12v7.36c0 .67-.73 1.09-1.29.72l-3.22-2.12H3c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h18c.55 0 1 .45 1 1v11.84z" fill="#1da1f2"/>
+                    </svg>
+                    See/Add Comments
+                </a>
+            </div>
+        </div>
+    </th:block>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http//www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        .main-content {
+            margin-left: 210px;
+            padding: 20px;
+        }
+
+        .card {
+            border-radius: 10px;
+        }
+
+        .table thead {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        .card-header.bg-dark {
+            background-color: #343a40 !important;
+        }
+        .navbar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 10px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            color: #f8f9fa;
+            margin-bottom: 0px;
+            font-size: 25px;
+            margin-top: 20px;
+        }
+
+        .navbar a {
+            padding: 5px 10px;
+            text-decoration: none;
+            font-size: 17px;
+            color: #f8f9fa;
+            display: block;
+            text-align: center;
+            margin-bottom: 50px;
+            margin-top: 20px;
+        }
+
+        .special {
+            background-color: #a80224;
+        }
+
+        .special:hover {
+            background-color: #fd0434 !important;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <a th:href="@{/user/home}"> <h2> Home Page</h2> </a>
+    <a th:href="@{/user/create-post}">Create Post</a>
+    <a th:href="@{/user/search-user}">Search User</a>
+    <a th:href="@{/user/profile(userId= ${currentUser.get().id})}">Profile</a>
+    <a th:href="@{/user/contacts}">Contacts</a>
+    <div sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/admin/home}">Admin Page</a>
+    </div>
+    <a class="special" th:href="@{/logout}">Logout</a>
+</div>
+
+<div class="main-content">
+    <div class="card shadow-sm">
+        <div class="card-header text-center bg-dark text-white">
+            <h4>ADMIN LIST</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Admin's Name</th>
+                    <th scope="col">Admin's Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="admins : ${adminList}">
+                    <th scope="row" th:text="${admins.username}"></th>
+                    <td th:text="${admins.email}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

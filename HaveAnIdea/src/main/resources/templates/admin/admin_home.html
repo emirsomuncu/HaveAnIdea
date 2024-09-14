@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Home Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        .navbar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 10px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            color: #f8f9fa;
+            margin-bottom: 0px;
+            font-size: 25px;
+            margin-top: 20px;
+        }
+
+        .navbar a {
+            padding: 5px 10px;
+            text-decoration: none;
+            font-size: 17px;
+            color: #f8f9fa;
+            display: block;
+            text-align: center;
+            margin-bottom: 50px;
+            margin-top: 20px;
+        }
+
+        .main-content {
+            margin-left: 210px;
+            padding: 20px;
+        }
+
+        .special {
+            background-color: #a80224;
+        }
+        .special:hover {
+            background-color: #fd0434 !important;
+        }
+        .chart-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: auto ;
+            padding-top: 100px;
+
+        }
+
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a th:href="@{/admin/home}" > <h2> Admin Panel</h2> </a>
+    <a th:href="@{/admin/manage}">Manage</a>
+    <a th:href="@{/admin/admin-register}">Register Admin</a>
+    <a th:href="@{/user/home}">User Home Page</a>
+    <a class="special" th:href="@{/logout}">Logout</a>
+</div>
+
+<div class="main-content">
+    <div class="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const userCount = [[${userCount}]] ;
+    const adminCount = [[${adminCount}]];
+    const postCount = [[${postCount}]];
+    const commentCount = [[${commentCount}]];
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Users', 'Admins', 'Posts', 'Comments'],
+            datasets: [{
+                label: 'Counts',
+                data: [userCount, adminCount, postCount, commentCount],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
