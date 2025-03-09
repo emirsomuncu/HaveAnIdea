@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f4f4f4;
+        margin: 0;
+    }
+    .form-container {
+        width: 100%;
+        max-width: 600px;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+</style>
+
+<body>
+
+<div class="container form-container">
+    <form action="#" th:action="@{/user/save-post}" th:object="${savePostRequest}" method="post">
+
+
+        <input type="hidden" th:field="*{id}">
+
+        <div class="mb-3">
+            <input type="text" th:field="*{title}" class="form-control" placeholder="Title(*)">
+            <span class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+        </div>
+
+        <div class="mb-3">
+            <textarea th:field="*{text}" class="form-control" placeholder="Text(*)" rows="4"></textarea>
+            <span class="text-danger" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
+        </div>
+
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-info">Share Post</button>
+            <a th:href="@{/user/home}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+
+</body>
+</html>

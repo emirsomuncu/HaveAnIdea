@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Comments / I Have An Idea</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        .navbar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 10px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            color: #f8f9fa;
+            margin-bottom: 0px;
+            font-size: 25px;
+            margin-top: 20px;
+        }
+
+        .navbar a {
+            padding: 5px 10px;
+            text-decoration: none;
+            font-size: 17px;
+            color: #f8f9fa;
+            display: block;
+            text-align: center;
+            margin-bottom: 50px;
+            margin-top: 20px;
+        }
+
+        .main-content {
+            margin-left: 210px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .post-container {
+            position: relative;
+            background-color: #fff;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .comment-container {
+            position: relative;
+            background-color: #fff;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .post-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .comment-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .post-text {
+            padding-top: 15px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .comment-text {
+            padding-top: 15px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .post-actions {
+            padding-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .post-actions button {
+            background-color: transparent;
+            border: none;
+            font-size: 16px;
+            color: #1da1f2;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .post-actions button:hover {
+            background-color: #108de3;
+        }
+
+
+        .post-actions .comment-btn {
+            display: flex;
+            text-decoration: none;
+            align-items: center;
+        }
+
+        .post-actions .comment-btn svg {
+            margin-right: 5px;
+        }
+
+        .special {
+            background-color: #a80224;
+        }
+
+        .special:hover {
+            background-color: #fd0434 !important;
+        }
+        .post-header svg , .comment-header svg{
+            width: 30px;
+            height: 24px;
+            margin-right: 5px;
+        }
+        .delete-btn {
+            text-decoration: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+            color: #f8f9fa;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        a span {
+            color: inherit;
+        }
+        a:hover span{
+            color: black;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a th:href="@{/user/home}"> <h2> Home Page</h2> </a>
+    <a th:href="@{/user/create-post}">Create Post</a>
+    <a th:href="@{/user/search-user}">Search User</a>
+    <a th:href="@{/user/profile(userId= ${currentUser.get().id})}">Profile</a>
+    <a th:href="@{/user/contacts}">Contacts</a>
+    <a class="special" th:href="@{/logout}">Logout</a>
+</div>
+
+<div class="main-content">
+
+        <div class="post-container">
+
+            <div th:if="${getPostByIdResponse.userId} == ${currentUser.get().id}">
+            <a th:href="@{/user/delete-post(id = ${getPostByIdResponse.id})}" class="delete-btn">Delete</a>
+            </div>
+
+            <div class="post-header">
+                   <span>
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                       </svg>
+                       <a th:href="@{/user/profile(userId = ${getPostByIdResponse.userId})}"> <span th:text="${getPostByIdResponse.userUsername}"></span> </a>
+                   </span>
+            </div>
+            <div class="post-text" th:text=" 'Topic : '  + ${getPostByIdResponse.title}"></div>
+            <div class="post-text" th:text="${getPostByIdResponse.text}" ></div>
+            <div class="post-actions">
+
+                <form action="#" th:action="@{/user/add-comment}" method="post">
+                    <input type="hidden" th:name="postId" th:value="${getPostByIdResponse.id}">
+                    <button type="submit" class="comment-btn" style="background: none; border: none; padding: 0; cursor: pointer;">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M21.99 15.84C21.86 15.19 20.89 15 20.14 15H12v7.36c0 .67-.73 1.09-1.29.72l-3.22-2.12H3c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h18c.55 0 1 .45 1 1v11.84z" fill="#1da1f2"/>
+                    </svg>
+                    Add Comment
+                    </button>
+                </form>
+
+            </div>
+
+
+        </div>
+
+        <th:block th:each="comments : ${getCommentsByPostIdResponses}">
+            <div class="comment-container">
+
+
+                <div th:if="${comments.userId} == ${currentUser.get().id}">
+                    <a th:href="@{/user/delete-comment(id= ${comments.id})}" class="delete-btn">Delete</a>
+                </div>
+
+                <div class="comment-header">
+                   <span>
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                       </svg>
+                       <a th:href="@{/user/profile(userId = ${comments.userId})}"> <span th:text="${comments.userUsername}"></span> </a>
+                   </span>
+                </div>
+                <div class="comment-text" th:text="${comments.text}"></div>
+
+            </div>
+        </th:block>
+</div>
+</body>
+</html>

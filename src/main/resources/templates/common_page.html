@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Have an Idea</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif !important;
+            background-color: #f4f4f4 !important;
+        }
+
+        .navbar {
+            margin-bottom: 0 !important;
+            background-color: #000 !important;
+        }
+
+        .navbar .navbar-brand {
+            font-size: 24px !important;
+            font-weight: bold !important;
+        }
+
+        .navbar .nav-link {
+            color: #ffffff !important;
+            margin-left: 20px !important;
+            font-size: 16px !important;
+        }
+
+        .navbar .nav-link:hover {
+            text-decoration: underline !important;
+        }
+
+        .login-info {
+            margin-right: 20px !important;
+            display: flex;
+            align-items: center;
+            font-size: 16px !important;
+            color: #ffffff !important;
+        }
+
+        .arrow {
+            margin-left: 20px;
+            font-size: 24px;
+            color: #ffffff;
+        }
+
+        .container h1 {
+            color: #211919 !important;
+        }
+
+        .container p {
+            color: #666 !important;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">I HAVE AN IDEA</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item login-info">
+                    To continue please login
+                    <span class="arrow"> →</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/custom-login-page}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/register}">Register</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div style="position: relative; width: 100%; height: 0; padding-top: 56.2225%;
+ padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 0; margin-bottom: 0.9em; overflow: hidden;
+ border-radius: 0; will-change: transform;">
+    <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+            src="https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAGOSe0x8hI&#x2F;g4avVbPuaNZyZLo8aeLLiA&#x2F;view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+    </iframe>
+</div>
+
+</body>
+</html>
