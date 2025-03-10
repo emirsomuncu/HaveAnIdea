@@ -1,4 +1,4 @@
-package com.emirsomuncu.HaveAnIdea.service.responses;
+package com.emirsomuncu.HaveAnIdea.service.responses.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

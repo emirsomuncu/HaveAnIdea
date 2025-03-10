@@ -1,8 +1,5 @@
 package com.emirsomuncu.HaveAnIdea.controllers;
 
-import com.emirsomuncu.HaveAnIdea.dao.UserDao;
-import com.emirsomuncu.HaveAnIdea.entities.Comment;
-import com.emirsomuncu.HaveAnIdea.entities.Post;
 import com.emirsomuncu.HaveAnIdea.entities.User;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.CommentService;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.LikeService;
@@ -12,17 +9,16 @@ import com.emirsomuncu.HaveAnIdea.service.requests.AddCommentRequest;
 import com.emirsomuncu.HaveAnIdea.service.requests.SavePostRequest;
 import com.emirsomuncu.HaveAnIdea.service.requests.SaveUserRequest;
 import com.emirsomuncu.HaveAnIdea.service.requests.UpdateUserRequest;
-import com.emirsomuncu.HaveAnIdea.service.responses.*;
-import com.emirsomuncu.HaveAnIdea.service.rules.LikeServiceImplRules;
+import com.emirsomuncu.HaveAnIdea.service.responses.comment.GetCommentByIdResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.comment.GetCommentsByPostIdResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.like.GetLikesByPostIdResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.post.GetPostByIdResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.*;
 import com.emirsomuncu.HaveAnIdea.service.rules.UserServiceImplRules;
 import jakarta.validation.Valid;
-import org.hibernate.engine.jdbc.mutation.spi.BindingGroup;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -30,29 +26,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.model.IModel;
 
-import java.security.Principal;
 import java.util.*;
-import java.util.function.Predicate;
 
+@RequiredArgsConstructor
 @Controller
 public class UserController {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private PostService postService;
-
-    @Autowired
-    private LikeService likeService;
-
-    @Autowired
-    private CommentService commentService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final PostService postService;
+    private final LikeService likeService;
+    private final CommentService commentService;
 
     @Autowired
     private UserServiceImplRules userServiceImplRules;

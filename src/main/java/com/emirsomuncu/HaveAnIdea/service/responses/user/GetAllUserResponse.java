@@ -1,5 +1,7 @@
-package com.emirsomuncu.HaveAnIdea.service.responses;
+package com.emirsomuncu.HaveAnIdea.service.responses.user;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,11 +9,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetUserByUsernameResponse {
+public class GetAllUserResponse {
 
-    private String id ;
+    private Long id ;
+
     private String username;
+
     private String email;
+
     private String role ;
+
 
 }

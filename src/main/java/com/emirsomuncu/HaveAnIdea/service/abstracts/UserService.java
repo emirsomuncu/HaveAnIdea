@@ -3,10 +3,10 @@ package com.emirsomuncu.HaveAnIdea.service.abstracts;
 import com.emirsomuncu.HaveAnIdea.entities.User;
 import com.emirsomuncu.HaveAnIdea.service.requests.SaveUserRequest;
 import com.emirsomuncu.HaveAnIdea.service.requests.UpdateUserRequest;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetAllUserResponse;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetUserByIdResponse;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetUserByRoleResponse;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetUserByUsernameResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetAllUserResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByIdResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByRoleResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByUsernameResponse;
 
 import java.util.List;
 import java.util.Optional;

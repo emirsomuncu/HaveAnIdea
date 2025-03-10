@@ -1,4 +1,4 @@
-package com.emirsomuncu.HaveAnIdea.service.responses;
+package com.emirsomuncu.HaveAnIdea.service.responses.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetCommentByIdResponse {
+public class GetUserByRoleResponse {
 
     private Long id ;
-    private String text ;
-    private Long postId;
+    private String username;
+    private String email;
 
 }

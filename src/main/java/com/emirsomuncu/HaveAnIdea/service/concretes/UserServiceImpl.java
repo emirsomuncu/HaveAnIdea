@@ -1,37 +1,33 @@
 package com.emirsomuncu.HaveAnIdea.service.concretes;
 
 import com.emirsomuncu.HaveAnIdea.core.utilites.mappers.ModelMapperService;
-import com.emirsomuncu.HaveAnIdea.dao.UserDao;
+import com.emirsomuncu.HaveAnIdea.repository.UserRepository;
 import com.emirsomuncu.HaveAnIdea.entities.User;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.UserService;
 import com.emirsomuncu.HaveAnIdea.service.requests.SaveUserRequest;
 import com.emirsomuncu.HaveAnIdea.service.requests.UpdateUserRequest;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetAllUserResponse;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetUserByIdResponse;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetUserByRoleResponse;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetUserByUsernameResponse;
-import com.emirsomuncu.HaveAnIdea.service.rules.UserServiceImplRules;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetAllUserResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByIdResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByRoleResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByUsernameResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserDao userDao ;
-
-    @Autowired
-    private ModelMapperService modelMapperService ;
-
+    private final UserRepository userRepository;
+    private final ModelMapperService modelMapperService ;
 
     @Override
     public void saveUser(SaveUserRequest saveUserRequest) {
 
         User user = this.modelMapperService.forRequest().map(saveUserRequest, User.class);
-        userDao.save(user);
+        userRepository.save(user);
 
     }
 
@@ -39,14 +35,14 @@ public class UserServiceImpl implements UserService {
     public void updateUser(UpdateUserRequest updateUserRequest) {
 
         User user = this.modelMapperService.forRequest().map(updateUserRequest , User.class);
-        this.userDao.save(user);
+        this.userRepository.save(user);
 
     }
 
     @Override
     public List<GetAllUserResponse> getAllUser() {
 
-        List<User> userList = this.userDao.findAll();
+        List<User> userList = this.userRepository.findAll();
         List<GetAllUserResponse> getAllUserResponses = userList.stream().map(allUser->this.modelMapperService
                 .forResponse().map(allUser , GetAllUserResponse.class)).toList();
 
@@ -55,18 +51,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        this.userDao.deleteById(id);
+        this.userRepository.deleteById(id);
     }
 
     @Override
     public Optional<User> findUserByEmail(String email) {
-        return this.userDao.findByEmail(email);
+        return this.userRepository.findByEmail(email);
     }
 
     @Override
     public GetUserByIdResponse getUserById(Long id) {
 
-        Optional<User> user = this.userDao.findById(id);
+        Optional<User> user = this.userRepository.findById(id);
         GetUserByIdResponse getUserByIdResponse = this.modelMapperService.forResponse().map(user,GetUserByIdResponse.class);
 
         return getUserByIdResponse;
@@ -74,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<GetUserByUsernameResponse> getUserByUsername(String username) {
-        List<User> userList = this.userDao.findUserByUsernameContainingIgnoreCase(username);
+        List<User> userList = this.userRepository.findUserByUsernameContainingIgnoreCase(username);
         List<GetUserByUsernameResponse> getUserByUsernameResponses = userList.stream().map(user -> this.modelMapperService
                 .forResponse().map(user , GetUserByUsernameResponse.class)).toList();
         return getUserByUsernameResponses;
@@ -82,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<GetUserByRoleResponse> getUserByRole(String role) {
-        List<User> userList = this.userDao.findUserByRole(role);
+        List<User> userList = this.userRepository.findUserByRole(role);
         List<GetUserByRoleResponse> getUserByRoleResponses = userList.stream().map(user -> this.modelMapperService
                 .forResponse().map(user , GetUserByRoleResponse.class )).toList();
 
@@ -92,14 +88,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long countUsers() {
 
-        Long userCount = this.userDao.count();
+        Long userCount = this.userRepository.count();
         return userCount;
     }
 
     @Override
     public Long countAdmins() {
         String role = "ADMIN,USER";
-        Long adminCount = this.userDao.countByRole(role);
+        Long adminCount = this.userRepository.countByRole(role);
         return adminCount;
     }
 

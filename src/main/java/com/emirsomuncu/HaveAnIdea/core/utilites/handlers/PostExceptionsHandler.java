@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
 @ControllerAdvice
-public class PostServiceImplRulesHandler {
+public class PostExceptionsHandler {
 
 
     @ExceptionHandler

@@ -1,4 +1,4 @@
-package com.emirsomuncu.HaveAnIdea.service.responses;
+package com.emirsomuncu.HaveAnIdea.service.responses.post;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;

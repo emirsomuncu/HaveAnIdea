@@ -7,10 +7,10 @@ import com.emirsomuncu.HaveAnIdea.service.abstracts.CommentService;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.PostService;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.UserService;
 import com.emirsomuncu.HaveAnIdea.service.requests.SaveUserRequest;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetAllUserResponse;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetUserByUsernameResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetAllUserResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByUsernameResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,20 +21,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Controller
 public class AdminController {
 
-    @Autowired
-    private UserService userService ;
-
-    @Autowired
-    private PostService postService ;
-
-    @Autowired
-    private CommentService commentService ;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder ;
+    private final UserService userService ;
+    private final PostService postService ;
+    private final CommentService commentService ;
+    private final PasswordEncoder passwordEncoder ;
 
     @GetMapping("/admin/admin-selection-page")
     public String adminSelectionPage() {

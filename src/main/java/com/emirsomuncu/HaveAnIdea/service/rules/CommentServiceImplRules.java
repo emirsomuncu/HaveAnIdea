@@ -1,8 +1,8 @@
 package com.emirsomuncu.HaveAnIdea.service.rules;
 
 import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.CommentDeletePermissionException;
-import com.emirsomuncu.HaveAnIdea.dao.CommentDao;
-import com.emirsomuncu.HaveAnIdea.dao.UserDao;
+import com.emirsomuncu.HaveAnIdea.repository.CommentRepository;
+import com.emirsomuncu.HaveAnIdea.repository.UserRepository;
 import com.emirsomuncu.HaveAnIdea.entities.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,18 +15,18 @@ import java.util.Optional;
 public class CommentServiceImplRules {
 
     @Autowired
-    private CommentDao commentDao ;
+    private CommentRepository commentRepository;
 
     @Autowired
-    private UserDao userDao ;
+    private UserRepository userRepository;
 
     public void checkUserToDeleteComments(Long id) {
 
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = currentUser.getUsername();
 
-        Optional<com.emirsomuncu.HaveAnIdea.entities.User> user = this.userDao.findByEmail(email);
-        Optional<Comment> comment = this.commentDao.findById(id);
+        Optional<com.emirsomuncu.HaveAnIdea.entities.User> user = this.userRepository.findByEmail(email);
+        Optional<Comment> comment = this.commentRepository.findById(id);
 
         if( (!comment.get().getUser().getId().equals(user.get().getId())) && (!user.get().getRole().equals("ADMIN,USER") ) ) {
             throw new CommentDeletePermissionException("You have no permission to delete this comment");

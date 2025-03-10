@@ -1,6 +1,6 @@
 package com.emirsomuncu.HaveAnIdea.service.abstracts;
 
-import com.emirsomuncu.HaveAnIdea.service.responses.GetLikesByPostIdResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.like.GetLikesByPostIdResponse;
 
 import java.util.List;
 

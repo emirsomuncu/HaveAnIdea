@@ -2,9 +2,9 @@ package com.emirsomuncu.HaveAnIdea.service.abstracts;
 
 import com.emirsomuncu.HaveAnIdea.entities.Comment;
 import com.emirsomuncu.HaveAnIdea.service.requests.AddCommentRequest;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetCommentByIdResponse;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetCommentsByPostIdResponse;
-import com.emirsomuncu.HaveAnIdea.service.responses.GetDesiredUserCommentsByUserIdResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.comment.GetCommentByIdResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.comment.GetCommentsByPostIdResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetDesiredUserCommentsByUserIdResponse;
 
 import java.util.List;
 

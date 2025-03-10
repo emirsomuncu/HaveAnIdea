@@ -1,15 +1,16 @@
 package com.emirsomuncu.HaveAnIdea.core.utilites.mappers;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class ModelMapperServiceImpl implements ModelMapperService{
 
-    @Autowired
-   private ModelMapper modelMapper ;
+   private final ModelMapper modelMapper ;
 
     @Override
     public ModelMapper forResponse() {
