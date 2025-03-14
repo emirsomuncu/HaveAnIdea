@@ -1,4 +1,4 @@
-package com.emirsomuncu.HaveAnIdea.core.utilites.exceptions;
+package com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.comment;
 
 import com.emirsomuncu.HaveAnIdea.entities.Comment;
 

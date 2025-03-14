@@ -1,6 +1,6 @@
 package com.emirsomuncu.HaveAnIdea.core.utilites.handlers;
 
-import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.ShowPostLikesPermissionException;
+import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.like.ShowPostLikesPermissionException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 

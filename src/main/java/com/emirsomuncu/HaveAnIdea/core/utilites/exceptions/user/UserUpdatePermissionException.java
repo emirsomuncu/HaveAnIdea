@@ -1,4 +1,4 @@
-package com.emirsomuncu.HaveAnIdea.core.utilites.exceptions;
+package com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.user;
 
 public class UserUpdatePermissionException extends RuntimeException{
 

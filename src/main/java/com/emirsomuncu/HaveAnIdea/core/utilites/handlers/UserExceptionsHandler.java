@@ -1,6 +1,6 @@
 package com.emirsomuncu.HaveAnIdea.core.utilites.handlers;
 
-import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.UserUpdatePermissionException;
+import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.user.UserUpdatePermissionException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 

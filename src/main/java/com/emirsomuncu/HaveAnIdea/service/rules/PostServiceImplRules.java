@@ -1,6 +1,6 @@
 package com.emirsomuncu.HaveAnIdea.service.rules;
 
-import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.PostDeletePermissionException;
+import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.post.PostDeletePermissionException;
 import com.emirsomuncu.HaveAnIdea.repository.PostRepository;
 import com.emirsomuncu.HaveAnIdea.repository.UserRepository;
 import com.emirsomuncu.HaveAnIdea.entities.Post;

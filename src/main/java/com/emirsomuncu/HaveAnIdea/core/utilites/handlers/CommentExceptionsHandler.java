@@ -1,6 +1,6 @@
 package com.emirsomuncu.HaveAnIdea.core.utilites.handlers;
 
-import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.CommentDeletePermissionException;
+import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.comment.CommentDeletePermissionException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 

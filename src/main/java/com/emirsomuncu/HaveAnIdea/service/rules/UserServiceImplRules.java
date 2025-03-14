@@ -1,6 +1,6 @@
 package com.emirsomuncu.HaveAnIdea.service.rules;
 
-import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.UserUpdatePermissionException;
+import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.user.UserUpdatePermissionException;
 import com.emirsomuncu.HaveAnIdea.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;

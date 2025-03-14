@@ -1,6 +1,6 @@
 package com.emirsomuncu.HaveAnIdea.service.rules;
 
-import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.ShowPostLikesPermissionException;
+import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.like.ShowPostLikesPermissionException;
 import com.emirsomuncu.HaveAnIdea.repository.PostRepository;
 import com.emirsomuncu.HaveAnIdea.repository.UserRepository;
 import com.emirsomuncu.HaveAnIdea.entities.Post;

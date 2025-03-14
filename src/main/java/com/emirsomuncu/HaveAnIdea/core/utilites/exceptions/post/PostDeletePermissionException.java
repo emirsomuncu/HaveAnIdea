@@ -1,4 +1,4 @@
-package com.emirsomuncu.HaveAnIdea.core.utilites.exceptions;
+package com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.post;
 
 public class PostDeletePermissionException extends RuntimeException{
 

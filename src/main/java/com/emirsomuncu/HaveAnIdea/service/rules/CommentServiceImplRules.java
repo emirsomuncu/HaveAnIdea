@@ -1,6 +1,6 @@
 package com.emirsomuncu.HaveAnIdea.service.rules;
 
-import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.CommentDeletePermissionException;
+import com.emirsomuncu.HaveAnIdea.core.utilites.exceptions.comment.CommentDeletePermissionException;
 import com.emirsomuncu.HaveAnIdea.repository.CommentRepository;
 import com.emirsomuncu.HaveAnIdea.repository.UserRepository;
 import com.emirsomuncu.HaveAnIdea.entities.Comment;
