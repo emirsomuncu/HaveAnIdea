@@ -13,6 +13,20 @@
             margin: 0;
         }
 
+        .navbar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 10px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .navbar h2 {
             color: #f8f9fa;
             margin-bottom: 0px;
@@ -29,10 +43,6 @@
             text-align: center;
             margin-bottom: 50px;
             margin-top: 20px;
-        }
-
-        .navbar a:hover {
-            background-color: #575757;
         }
 
         .main-content {
@@ -71,22 +81,9 @@
         .post-actions {
             padding-top: 15px;
             display: flex;
+            align-items: center;
+            gap: 15px;
             justify-content: space-between;
-        }
-
-        .post-actions button {
-            background-color: transparent;
-            border: none;
-            font-size: 16px;
-            color: #1da1f2;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 50%;
-            transition: background-color 0.3s ease;
-        }
-
-        .post-actions button:hover {
-            background-color: #e8f5fe;
         }
 
         .post-actions .like-btn {
@@ -103,10 +100,19 @@
             display: flex;
             text-decoration: none;
             align-items: center;
+            margin-left: auto;
         }
 
         .post-actions .comment-btn svg {
             margin-right: 5px;
+        }
+
+        .special {
+            background-color: #a80224;
+        }
+
+        .special:hover {
+            background-color: #fd0434 !important;
         }
 
         .post-header svg {
@@ -114,6 +120,7 @@
             height: 24px;
             margin-right: 5px;
         }
+
         .delete-btn {
             text-decoration: none;
             position: absolute;
@@ -127,17 +134,36 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         .delete-btn:hover {
             background-color: #ff0015;
             color: #f8f9fa;
         }
 
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        a span {
+            color: inherit;
+        }
+
+        a:hover span {
+            color: black;
+            text-decoration: underline;
+        }
+
+        .like-count {
+            font-size: 16px;
+            color: #333;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
 
 <div class="main-content">
-
 
     <th:block th:each=" posts : ${postList} ">
 
@@ -157,22 +183,32 @@
                        <span th:text="'( Posted at : ' + ${posts.createdAt} + ' )' " > </span>
                    </span>
             </div>
-            <div class="post-text" th:text=" 'Topic : '  + ${posts.title}" ></div>
+            <div class="post-text">
+                Topic :
+                <a th:href="@{/user/topic/{topic}/posts(topic=${posts.title})}"
+                   style="text-decoration: none; color: inherit;"
+                   class="hover-link">
+                    <span th:text="${posts.title}"></span>
+                </a>
+            </div>
             <div class="post-text" th:text="${posts.text}" ></div>
             <div class="post-actions">
-                <a  class="like-btn">
+                <a th:href="@{/user/post-likes(postId= ${posts.id})}" class="like-btn" >
                     <svg width="24" height="24" viewBox="0 0 24 24">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#1da1f2"/>
                     </svg>
                     Like
                 </a>
+                <span class="like-count" th:text="'(' + ${postLikeCounts[posts.id]} + ')' "></span>
+                <div th:if="${currentUser.get().id} == ${posts.userId}">
+                    <a th:href="@{/user/{postId}/likes(postId=${posts.id})}"> <span> See Likes </span> </a>
+                </div>
                 <a class="comment-btn" th:href="@{/user/view-comments(id = ${posts.id})}">
                     <svg width="24" height="24" viewBox="0 0 24 24">
                         <path d="M21.99 15.84C21.86 15.19 20.89 15 20.14 15H12v7.36c0 .67-.73 1.09-1.29.72l-3.22-2.12H3c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h18c.55 0 1 .45 1 1v11.84z" fill="#1da1f2"/>
                     </svg>
                     See/Add Comments
                 </a>
-
             </div>
         </div>
 

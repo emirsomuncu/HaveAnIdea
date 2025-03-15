@@ -5,6 +5,7 @@ import com.emirsomuncu.HaveAnIdea.repository.PostRepository;
 import com.emirsomuncu.HaveAnIdea.entities.Post;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.PostService;
 import com.emirsomuncu.HaveAnIdea.service.requests.SavePostRequest;
+import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsAccordingToTopic;
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.user.GetDesiredUserPostsByUserIdResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetPostByIdResponse;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -56,6 +58,14 @@ public class PostServiceImpl implements PostService {
         List<GetAllPostsResponse> getAllPostsResponses = posts.stream().map(post -> this.modelMapperService
                 .forResponse().map(post , GetAllPostsResponse.class)).toList();
         return getAllPostsResponses ;
+    }
+
+    @Override
+    public List<GetAllPostsAccordingToTopic> getAllPostsAccordingToTopic(String topic) {
+
+        List<Post> postList = this.postRepository.findPostByTitle(topic);
+        List<GetAllPostsAccordingToTopic> getAllPostsAccordingToTopics = postList.stream().map(post -> this.modelMapperService.forResponse().map(post , GetAllPostsAccordingToTopic.class)).collect(Collectors.toList());
+        return getAllPostsAccordingToTopics;
     }
 
     @Override

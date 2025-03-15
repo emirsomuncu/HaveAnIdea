@@ -1,17 +1,13 @@
 package com.emirsomuncu.HaveAnIdea.service.responses.post;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.aspectj.lang.annotation.AfterReturning;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetAllPostsResponse {
+public class GetAllPostsAccordingToTopic {
 
     private Long id ;
     private String title;

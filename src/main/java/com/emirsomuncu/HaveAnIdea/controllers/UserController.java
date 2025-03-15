@@ -55,6 +55,11 @@ public class UserController {
 
 
         Optional<User> user = this.userService.findUserByEmail(saveUserRequest.getEmail());
+
+        if (userServiceImplRules.checkUserIsExistsByUsername(saveUserRequest.getUsername())) {
+            bindingResult.addError(new FieldError("saveUserRequest" , "username" , "Username is already used" ));
+        }
+
         if (user.isPresent()) {
             bindingResult.addError(
                     new FieldError("saveUserRequest", "email", "Email is already used")
@@ -109,6 +114,14 @@ public class UserController {
         List<GetDesiredUserPostsByUserIdResponse> postList = this.postService.getDesiredUserPostsByUserId(userId);
         model.addAttribute("postList", postList);
 
+
+        Map<Long , Long> postLikeCounts = new HashMap<>();
+        for(GetDesiredUserPostsByUserIdResponse post : postList) {
+            Long numberOfLikes = this.likeService.countLikes(post.getId());
+            postLikeCounts.put(post.getId() , numberOfLikes );
+        }
+
+        model.addAttribute("postLikeCounts" , postLikeCounts);
         return "/user/user_desired_user_post";
     }
 

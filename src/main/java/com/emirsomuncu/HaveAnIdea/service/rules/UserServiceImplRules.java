@@ -15,6 +15,15 @@ public class UserServiceImplRules {
     @Autowired
     private UserRepository userRepository;
 
+    public Boolean checkUserIsExistsByUsername(String username) {
+        com.emirsomuncu.HaveAnIdea.entities.User user = this.userRepository.findUserByUsername(username);
+        if( user == null) {
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
     public void checkUserToUpdateProfile(Long userId) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

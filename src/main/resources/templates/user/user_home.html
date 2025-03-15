@@ -189,7 +189,12 @@
                     <span th:text="'( Posted at : ' + ${posts.createdAt} + ' )' " > </span>
                 </span>
             </div>
-            <div class="post-text" th:text=" 'Topic : '  + ${posts.title}" ></div>
+            <div class="post-text">
+                Topic :
+                <a th:href="@{/user/topic/{topic}/posts(topic=${posts.title})}" style="text-decoration: none; color: inherit;">
+                    <span th:text="${posts.title}"></span>
+                </a>
+            </div>
             <div class="post-text" th:text="${posts.text}" ></div>
             <div class="post-actions">
                 <a th:href="@{/user/post-likes(postId= ${posts.id})}" class="like-btn" >

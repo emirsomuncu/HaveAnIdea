@@ -2,6 +2,7 @@ package com.emirsomuncu.HaveAnIdea.service.abstracts;
 
 import com.emirsomuncu.HaveAnIdea.entities.Post;
 import com.emirsomuncu.HaveAnIdea.service.requests.SavePostRequest;
+import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsAccordingToTopic;
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.user.GetDesiredUserPostsByUserIdResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetPostByIdResponse;
@@ -14,6 +15,7 @@ public interface PostService {
     public List<GetDesiredUserPostsByUserIdResponse> getDesiredUserPostsByUserId(Long id);
     public GetPostByIdResponse getPostById(Long id);
     public List<GetAllPostsResponse> getAllPosts();
+    public List<GetAllPostsAccordingToTopic> getAllPostsAccordingToTopic(String topic);
     public void deletePost(Long id);
     public void savePost(SavePostRequest savePostRequest);
     public Long countPosts();

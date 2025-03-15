@@ -15,7 +15,7 @@
         }
         .form-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 465px;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
@@ -57,7 +57,7 @@
 
     <form th:action="@{/authenticate-user}" method="post">
         <div th:if="${param.error}" class="alert alert-danger">
-            Sorry! Your Email-Password duo is not true
+            Sorry! Your Email-Password duo does not match
         </div>
         <div th:if="${param.logout}" class="alert alert-success">
             You have been logged out.
@@ -75,6 +75,9 @@
 
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
+    <hr>
+    <h6> (If you are not registered,you must register to continue) </h6>
+    <a th:href="@{/register}" type="submit"  class="btn btn-primary">Register</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXlY+Pp4E0yvHbJOG9FJZZOu20Qw1pDxFLtqG4Us2gKNfEM8KQvWOny08fih" crossorigin="anonymous"></script>
