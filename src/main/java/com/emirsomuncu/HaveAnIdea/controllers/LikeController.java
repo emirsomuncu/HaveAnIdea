@@ -25,7 +25,7 @@ public class LikeController {
     private final LikeService likeService;
 
     @RequestMapping("/user/post-likes")
-    public String postLikes(@RequestParam Long postId , Model model ) {
+    public String postLikes(@RequestParam Long postId) {
 
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = user.getUsername();
@@ -33,6 +33,17 @@ public class LikeController {
 
         this.likeService.saveLike(postId , currentUser.get().getId() );
         return "redirect:/user/home";
+    }
+
+    @RequestMapping("/user/topics-post-likes")
+    public String postLikeForFromTopicPage( Long postId  , String topicName) {
+
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = user.getUsername();
+        Optional<User> currentUser = this.userService.findUserByEmail(email);
+        this.likeService.saveLike(postId , currentUser.get().getId() );
+
+        return "redirect:/user/topic/" + topicName + "/posts";
     }
 
     @GetMapping("/user/{postId}/likes")

@@ -1,15 +1,10 @@
 package com.emirsomuncu.HaveAnIdea.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -38,7 +33,6 @@ public class User {
 
     @Column(name = "role")
     private String role ;
-
 
     @OneToMany(mappedBy = "user" , cascade = CascadeType.REMOVE)
     private List<Post> posts ;

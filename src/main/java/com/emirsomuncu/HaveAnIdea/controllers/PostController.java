@@ -64,14 +64,14 @@ public class PostController {
         return "redirect:/user/home";
     }
 
-    @GetMapping("/topic/{topic}/posts")
-    public String getAllPostAccordingToTopic(@PathVariable String topic , Model model) {
+    @GetMapping("/topic/{topicName}/posts")
+    public String getAllPostAccordingToTopic(@PathVariable String topicName , Model model) {
 
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = user.getUsername();
         User currentUser = this.userRepository.findByEmail(email).get();
 
-        List<GetAllPostsAccordingToTopic> posts = this.postService.getAllPostsAccordingToTopic(topic);
+        List<GetAllPostsAccordingToTopic> posts = this.postService.getAllPostsAccordingToTopic(topicName);
 
         Map<Long , Long> postLikeCounts = new HashMap<>();
         for(GetAllPostsAccordingToTopic post : posts) {
