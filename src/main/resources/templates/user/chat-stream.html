@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Streaming AI Chat</title>
+    <meta charset="UTF-8">
+    <script>
+        function sendMessage() {
+            const userMessage = document.getElementById("userInput").value;
+            const outputDiv = document.getElementById("output");
+            outputDiv.innerHTML = "<strong>Bot:</strong> ";
+
+            const eventSource = new EventSource(`/chat-with-stream-response?message=` + encodeURIComponent(userMessage));
+            eventSource.onmessage = function (event) {
+                outputDiv.innerHTML += event.data;
+            };
+            eventSource.onerror = function () {
+                eventSource.close();
+            };
+
+            document.getElementById("userMessage").innerText = "Siz: " + userMessage;
+        }
+    </script>
+</head>
+<body>
+<h1>ASK AI</h1>
+<input type="text" id="userInput" placeholder="Write your problem" />
+<button onclick="sendMessage()">Send</button>
+
+<p id="userMessage"></p>
+<p id="output"></p>
+</body>
+</html>

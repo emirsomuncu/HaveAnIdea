@@ -12,8 +12,4 @@ public class HaveAnIdeaApplication {
 		SpringApplication.run(HaveAnIdeaApplication.class, args);
 	}
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
 }
