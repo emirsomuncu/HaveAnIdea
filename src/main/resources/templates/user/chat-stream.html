@@ -1,32 +1,280 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Streaming AI Chat</title>
+    <title>Ask AI</title>
     <meta charset="UTF-8">
-    <script>
-        function sendMessage() {
-            const userMessage = document.getElementById("userInput").value;
-            const outputDiv = document.getElementById("output");
-            outputDiv.innerHTML = "<strong>Bot:</strong> ";
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 30px;
+            background-color: #e1e8ed;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        #chatInputContainer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+        textarea {
+            flex: 1;
+            min-height: 50px;
+            height: 50px;
+            resize: none;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            background-color: #f1f1f1;
+            color: black;
+            margin-right: 10px;
+            text-align: left;
+            word-wrap: break-word;
+        }
+        button {
+            padding: 12px 16px;
+            font-size: 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .chat-message {
+            max-width: 60%;
+            padding: 10px;
+            border-radius: 15px;
+            font-size: 16px;
+            word-wrap: break-word;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
 
-            const eventSource = new EventSource(`/chat-with-stream-response?message=` + encodeURIComponent(userMessage));
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: #25D366;
+            text-align: right;
+        }
+        .bot-message {
+            align-self: flex-start;
+            background-color: #f1f1f1;
+            text-align: left;
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: white;
+        }
+
+        .dark-mode textarea {
+            background-color: #555;
+            color: white;
+            border: 1px solid #444;
+        }
+
+        .dark-mode button {
+            background-color: #3e8e41;
+        }
+
+        .dark-mode .chat-message {
+            background-color: #444;
+        }
+
+        .dark-mode .user-message {
+            background-color: #4CAF50;
+        }
+
+        #darkModeToggle {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 10px;
+            background-color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #darkModeToggle:hover {
+            background-color: #ddd;
+        }
+
+        .sun-icon,
+        .moon-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        #darkModeToggle.light-mode {
+            background-color: #333;
+            color: white;
+        }
+
+        #darkModeToggle.dark-mode {
+            background-color: white;
+            color: black;
+        }
+
+        #backToHomeButton {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            padding: 10px 20px;
+            background-color: #090909;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #backToHomeButton:hover {
+            background-color: #0e0e0e;
+        }
+
+    </style>
+    <script>
+        let loadingInterval;
+        let eventSource;
+
+        function startLoadingAnimation(messageContainer) {
+            let dots = 0;
+            loadingInterval = setInterval(() => {
+                if (messageContainer) {
+                    dots = (dots + 1) % 4;
+                    messageContainer.innerText = "AI writing" + ".".repeat(dots);
+                }
+            }, 500);
+        }
+
+        function stopLoadingAnimation() {
+            clearInterval(loadingInterval);
+        }
+
+        function sendMessage() {
+            const userMessage = document.getElementById("userInput").value.trim();
+            if (userMessage === "") return;
+
+            const outputDiv = document.getElementById("output");
+
+            const userDiv = document.createElement("div");
+            userDiv.className = "chat-message user-message";
+            userDiv.innerText = userMessage;
+            outputDiv.appendChild(userDiv);
+
+            const botDiv = document.createElement("div");
+            botDiv.className = "chat-message bot-message";
+            const loadingSpan = document.createElement("span");
+            loadingSpan.id = "loading-" + Date.now();
+            loadingSpan.innerText = "AI writing";
+            botDiv.appendChild(loadingSpan);
+            outputDiv.appendChild(botDiv);
+
+            startLoadingAnimation(loadingSpan);
+
+            eventSource = new EventSource(`/chat-with-stream-response?message=` + encodeURIComponent(userMessage));
+
             eventSource.onmessage = function (event) {
-                outputDiv.innerHTML += event.data;
+                stopLoadingAnimation();
+                loadingSpan.remove();
+                botDiv.innerHTML += event.data;
             };
+
             eventSource.onerror = function () {
+                stopLoadingAnimation();
                 eventSource.close();
             };
 
-            document.getElementById("userMessage").innerText = "Siz: " + userMessage;
+            document.getElementById("userInput").value = "";
+            outputDiv.scrollTop = outputDiv.scrollHeight;
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const input = document.getElementById("userInput");
+            input.addEventListener("keyup", function (event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            const darkModeToggle = document.getElementById("darkModeToggle");
+            darkModeToggle.addEventListener("click", function () {
+                document.body.classList.toggle("dark-mode");
+
+                // Toggle button style based on dark mode
+                if (document.body.classList.contains("dark-mode")) {
+                    darkModeToggle.classList.remove("light-mode");
+                    darkModeToggle.classList.add("dark-mode");
+                } else {
+                    darkModeToggle.classList.remove("dark-mode");
+                    darkModeToggle.classList.add("light-mode");
+                }
+
+                const icon = document.body.classList.contains("dark-mode")
+                    ? '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="sun-icon"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2m0 14v2m9-9h2m-18 0H3m16.364 6.364l1.414 1.414M6.636 6.636L5.222 5.222m13.536 0l-1.414 1.414M6.636 17.364l-1.414 1.414"></path></svg>'
+                    : '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="moon-icon"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1112.21 3c.38 0 .75.06 1.11.17a8.986 8.986 0 009.48 9.48c-.11.36-.17.73-.17 1.11z"></path></svg>';
+
+                darkModeToggle.innerHTML = icon;
+            });
+
+            if (document.body.classList.contains("dark-mode")) {
+                darkModeToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="sun-icon"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2m0 14v2m9-9h2m-18 0H3m16.364 6.364l1.414 1.414M6.636 6.636L5.222 5.222m13.536 0l-1.414 1.414M6.636 17.364l-1.414 1.414"></path></svg>';
+            } else {
+                darkModeToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="moon-icon"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1112.21 3c.38 0 .75.06 1.11.17a8.986 8.986 0 009.48 9.48c-.11.36-.17.73-.17 1.11z"></path></svg>';
+            }
+
+            // Back to home button
+            const backButton = document.getElementById("backToHomeButton");
+            backButton.addEventListener("click", function() {
+                window.location.href = '/user/home';
+            });
+        });
     </script>
 </head>
 <body>
-<h1>ASK AI</h1>
-<input type="text" id="userInput" placeholder="Write your problem" />
-<button onclick="sendMessage()">Send</button>
+<button id="backToHomeButton">Back To Home Page</button>
+<button id="darkModeToggle" class="light-mode">
+</button>
 
-<p id="userMessage"></p>
-<p id="output"></p>
+<h1>ASK AI</h1>
+
+<div id="chatInputContainer">
+    <textarea id="userInput" placeholder="Write your problem"></textarea>
+    <button onclick="sendMessage()">➤</button>
+</div>
+
+<div id="output"></div>
+
 </body>
 </html>
