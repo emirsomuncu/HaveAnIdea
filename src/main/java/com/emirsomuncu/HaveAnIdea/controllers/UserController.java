@@ -136,6 +136,7 @@ public class UserController {
 
         List<GetDesiredUserCommentsByUserIdResponse> commentList = this.commentService.getDesiredUserCommentsByUserId(userId);
         model.addAttribute("commentList", commentList);
+        model.addAttribute("userId" , userId);
 
         return "/user/user_desired_user_comments";
     }
@@ -233,6 +234,9 @@ public class UserController {
 
     @GetMapping("/user/search-user")
     public String searchUser(@RequestParam(value = "name", required = false) String name, Model model) {
+
+        List<User> randomFiveUser = this.userService.getRandomFiveUser();
+        model.addAttribute("randomFiveUser" ,randomFiveUser);
 
         if(name != null) {
             List<GetUserByUsernameResponse> userList = this.userService.getUserByUsername(name);

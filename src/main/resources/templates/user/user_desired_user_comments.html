@@ -10,14 +10,25 @@
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .back-to-profile {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            z-index: 1000;
         }
 
         .main-content {
-            margin-left: 210px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin-top: 0;
+            padding: 20px 10px 10px 10px;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .comment-container {
@@ -27,9 +38,8 @@
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             width: 100%;
-            max-width: 700px;
         }
 
         .comment-header {
@@ -39,7 +49,7 @@
         }
 
         .comment-text {
-            padding-top: 15px;
+            padding-top: 10px;
             font-size: 16px;
             color: #333;
             margin-bottom: 15px;
@@ -87,27 +97,59 @@
             color: #0056b3;
         }
 
+        .no-comments-box {
+            background-color: #a80224;
+            color: #ffffff;
+            border: 1px solid #ffeeba;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 22px;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease;
+            margin-top: 100px;
+        }
+
+        .no-comments-icon {
+            font-size: 50px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
+<a th:href="@{/user/profile(userId=${userId})}" class="btn btn-primary back-to-profile">
+    Back to Profile
+</a>
+
 <div class="main-content">
+
+    <div th:if="${#lists.isEmpty(commentList)}" class="no-comments-box">
+        <div class="no-comments-icon">😢</div>
+        <h4>There are no comments from this user</h4>
+    </div>
+
     <th:block th:each="comments : ${commentList}">
         <div class="comment-container">
             <div th:if="${comments.userId} == ${currentUser.get().id}">
-                <a th:href="@{/user/delete-comment(id= ${comments.id})}" class="delete-btn">Delete</a>
+                <a th:href="@{/user/delete-comment(id=${comments.id})}" class="delete-btn">Delete</a>
             </div>
             <div class="comment-header">
                 <span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                     </svg>
-                    <a> <span th:text="${comments.userUsername}"></span> </a>
+                    <a><span th:text="${comments.userUsername}"></span></a>
                 </span>
             </div>
             <div class="comment-text" th:text="${comments.text}"></div>
             <div class="go-post-btn">
-                <a th:href="@{/user/view-comments(id = ${comments.postId})}">Click to See With Post</a>
+                <a th:href="@{/user/view-comments(id=${comments.postId})}">Click to See With Post</a>
             </div>
         </div>
     </th:block>

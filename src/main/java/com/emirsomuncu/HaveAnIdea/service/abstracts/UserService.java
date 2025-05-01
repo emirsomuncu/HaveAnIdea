@@ -23,5 +23,6 @@ public interface UserService {
     public List<GetUserByRoleResponse> getUserByRole(String role);
     public Long countUsers();
     public Long countAdmins();
+    public List<User> getRandomFiveUser();
 
 }

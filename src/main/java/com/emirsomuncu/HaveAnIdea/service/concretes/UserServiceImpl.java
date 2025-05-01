@@ -99,4 +99,9 @@ public class UserServiceImpl implements UserService {
         return adminCount;
     }
 
+    @Override
+    public List<User> getRandomFiveUser() {
+        return this.userRepository.getRandomFiveUser();
+    }
+
 }

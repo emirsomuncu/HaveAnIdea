@@ -12,15 +12,6 @@
             margin: 0;
         }
 
-        .post-topic-header {
-            text-align: left;
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #333;
-            margin-top: 35px;
-            margin-left: 500px;
-        }
         .navbar {
             height: 100%;
             width: 200px;
@@ -59,6 +50,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        .post-topic-header {
+            width: 100%;
+            max-width: 900px; /* post-container ile aynı genişlik */
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .post-topic-header h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
         }
 
         .post-container {
@@ -183,12 +187,14 @@
     <a class="special" th:href="@{/logout}">Logout</a>
 </div>
 
-<div class="post-topic-header">
-    <h2>
-        <span th:text="'Topic: ' + ${posts[0].title}"></span>
-    </h2>
-</div>
 <div class="main-content">
+
+    <div class="post-topic-header">
+        <h2>
+            <span th:text="'Topic: ' + ${posts[0].title}"></span>
+        </h2>
+    </div>
+
     <th:block th:each="posts : ${posts}">
         <div class="post-container">
             <div th:if="${posts.userId} == ${currentUser.id}">
