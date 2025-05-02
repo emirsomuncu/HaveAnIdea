@@ -11,6 +11,9 @@
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
         }
 
         .navbar h2 {
@@ -32,11 +35,12 @@
         }
 
         .main-content {
-            margin-left: 210px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin-top: 0;
+            padding: 20px 10px 10px 10px;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .post-container {
@@ -48,7 +52,6 @@
             padding: 20px;
             margin-bottom: 20px;
             width: 100%;
-            max-width: 900px;
         }
 
         .post-header {
@@ -145,34 +148,63 @@
             color: #333;
             margin-left: 10px;
         }
+
+        .no-comments-box {
+            background-color: #a80224;
+            color: #ffffff;
+            border: 1px solid #ffeeba;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 22px;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease;
+            margin-top: 100px;
+        }
+
+        .no-comments-icon {
+            font-size: 50px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
     </style>
 </head>
 <body>
+
 <div style="position: absolute; top: 20px; right: 20px;">
     <a th:href="@{/user/profile(userId=${currentUser.get().id})}" class="btn btn-primary">
         Back to Profile
     </a>
 </div>
+
 <div class="main-content">
 
-    <th:block th:each=" posts : ${postList} ">
+    <div th:if="${#lists.isEmpty(postList)}" class="no-comments-box">
+        <div class="no-comments-icon">😢</div>
+        <h4>There are no posts from this user</h4>
+    </div>
 
+    <th:block th:each="posts : ${postList}">
         <div class="post-container">
-
             <div th:if="${posts.userId} == ${currentUser.get().id}">
-                <a th:href="@{/user/delete-post(id = ${posts.id})}" class="delete-btn">Delete</a>
+                <a th:href="@{/user/delete-post(id=${posts.id})}" class="delete-btn">Delete</a>
             </div>
-
 
             <div class="post-header">
-                   <span>
-                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                       </svg>
-                       <a> <span th:text="${posts.userUsername}"></span> </a>
-                       <span th:text="'( Posted at : ' + ${posts.createdAt} + ' )' " > </span>
-                   </span>
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>
+                    <a><span th:text="${posts.userUsername}"></span></a>
+                    <span th:text="'( Posted at : ' + ${posts.createdAt} + ' )'"></span>
+                </span>
             </div>
+
             <div class="post-text">
                 Topic :
                 <a th:href="@{/user/topic/{topic}/posts(topic=${posts.title})}"
@@ -181,27 +213,34 @@
                     <span th:text="${posts.title}"></span>
                 </a>
             </div>
-            <div class="post-text" th:text="${posts.text}" ></div>
+
+            <div class="post-text" th:text="${posts.text}"></div>
+
             <div class="post-actions">
-                <a th:href="@{/user/posts/post-likes(postId= ${posts.id})}" class="like-btn" >
+                <a th:href="@{/user/posts/post-likes(postId=${posts.id})}" class="like-btn">
                     <svg width="24" height="24" viewBox="0 0 24 24">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#1da1f2"/>
                     </svg>
                     Like
                 </a>
-                <span class="like-count" th:text="'(' + ${postLikeCounts[posts.id]} + ')' "></span>
+
+                <span class="like-count" th:text="'(' + ${postLikeCounts[posts.id]} + ')'"></span>
+
                 <div th:if="${currentUser.get().id} == ${posts.userId}">
-                    <a th:href="@{/user/{postId}/likes(postId=${posts.id})}"> <span> See Likes </span> </a>
+                    <a th:href="@{/user/{postId}/likes(postId=${posts.id})}">
+                        <span>See Likes</span>
+                    </a>
                 </div>
-                <a class="comment-btn" th:href="@{/user/view-comments(id = ${posts.id})}">
+
+                <a class="comment-btn" th:href="@{/user/view-comments(id=${posts.id})}">
                     <svg width="24" height="24" viewBox="0 0 24 24">
                         <path d="M21.99 15.84C21.86 15.19 20.89 15 20.14 15H12v7.36c0 .67-.73 1.09-1.29.72l-3.22-2.12H3c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h18c.55 0 1 .45 1 1v11.84z" fill="#1da1f2"/>
                     </svg>
                     See/Add Comments
                 </a>
             </div>
-        </div>
 
+        </div>
     </th:block>
 
 </div>

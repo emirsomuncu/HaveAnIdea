@@ -211,8 +211,9 @@ public class UserController {
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = user.getUsername();
         Optional<User> currentUser = this.userService.findUserByEmail(email);
-        updateUserRequest.setOldPassword(this.passwordEncoder.encode(updateUserRequest.getOldPassword()));
-        if (this.passwordEncoder.matches(updateUserRequest.getOldPassword(), currentUser.get().getPassword())) {
+
+        String oldPasswordTry = updateUserRequest.getOldPassword();
+        if (!this.passwordEncoder.matches( oldPasswordTry , currentUser.get().getPassword())) {
             bindingResult.addError(new FieldError("UpdateUserRequest", "oldPassword", "Password is not true"));
         }
 
@@ -246,22 +247,6 @@ public class UserController {
 
         return "/user/user_search_user";
     }
-
-    @GetMapping("/user/contacts")
-    public String contactsInfo(Model model) {
-
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = user.getUsername();
-        Optional<User> currentUser = this.userService.findUserByEmail(email);
-        model.addAttribute("currentUser" ,currentUser);
-
-        String role = "ADMIN,USER";
-        List<GetUserByRoleResponse> adminList = this.userService.getUserByRole(role);
-        model.addAttribute("adminList", adminList);
-
-        return "/user/user_contacts";
-    }
-
 }
 
 

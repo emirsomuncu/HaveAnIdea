@@ -180,7 +180,6 @@
     <a th:href="@{/user/search-user}">Search User</a>
     <a th:href="@{/user/profile(userId= ${currentUser.id})}">Profile</a>
     <a th:href="@{/chat-stream}">Ask AI</a>
-    <a th:href="@{/user/contacts}">Contacts</a>
     <div sec:authorize="hasRole('ADMIN')">
         <a th:href="@{/admin/home}">Admin Page</a>
     </div>
