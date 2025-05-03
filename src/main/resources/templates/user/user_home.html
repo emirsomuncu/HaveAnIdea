@@ -24,6 +24,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+
         }
 
         .navbar h2 {
@@ -173,6 +174,45 @@
         .admin-btn:hover {
             background-color: #ff0015;
         }
+
+        .badge-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .admin-badge {
+            width: 24px;
+            height: 24px;
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .badge-wrapper:hover .admin-badge {
+            transform: scale(1.5);
+        }
+
+        .badge-tooltip {
+            visibility: hidden;
+            width: 60px;
+            background-color: #343a40;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+
+        .badge-wrapper:hover .badge-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -200,27 +240,38 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                     </svg>
-                    <a th:href="@{/user/profile(userId = ${posts.userId})}"> <span th:text="${posts.userUsername}"></span> </a>
-                    <span th:text="'( Posted at : ' + ${posts.createdAt} + ' )' " > </span>
+                    <a th:href="@{/user/profile(userId = ${posts.userId})}">
+                        <span th:text="${posts.userUsername}"></span>
+                    </a>
+
+                    <span th:if="${posts.userRole.contains('ADMIN')}" class="badge-wrapper">
+                        <img src="/images/police-badge.jpg" alt="Admin Badge" class="admin-badge">
+                        <div class="badge-tooltip">Admin</div>
+                    </span>
+
+                    <span th:text="'( Posted at : ' + ${posts.createdAt} + ' )'"></span>
                 </span>
             </div>
+
             <div class="post-text">
                 Topic :
                 <a th:href="@{/user/topic/{topic}/posts(topic=${posts.title})}" style="text-decoration: none; color: inherit;">
                     <span th:text="${posts.title}"></span>
                 </a>
             </div>
-            <div class="post-text" th:text="${posts.text}" ></div>
+            <div class="post-text" th:text="${posts.text}"></div>
             <div class="post-actions">
-                <a th:href="@{/user/post-likes(postId= ${posts.id})}" class="like-btn" >
+                <a th:href="@{/user/post-likes(postId= ${posts.id})}" class="like-btn">
                     <svg width="24" height="24" viewBox="0 0 24 24">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#1da1f2"/>
                     </svg>
                     Like
                 </a>
-                <span class="like-count" th:text="'(' + ${postLikeCounts[posts.id]} + ')' "></span>
+                <span class="like-count" th:text="'(' + ${postLikeCounts[posts.id]} + ')'"></span>
                 <div th:if="${currentUser.get().id} == ${posts.userId}">
-                    <a th:href="@{/user/{postId}/likes(postId=${posts.id})}"> <span> See Likes </span> </a>
+                    <a th:href="@{/user/{postId}/likes(postId=${posts.id})}">
+                        <span> See Likes </span>
+                    </a>
                 </div>
                 <a class="comment-btn" th:href="@{/user/view-comments(id = ${posts.id})}">
                     <svg width="24" height="24" viewBox="0 0 24 24">

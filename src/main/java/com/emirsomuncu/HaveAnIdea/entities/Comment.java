@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +25,10 @@ public class Comment {
     @Lob
     @Column(name = "text" , columnDefinition = "text")
     private String text ;
+
+    @CreationTimestamp
+    @Column(name = "created_at" , updatable = false)
+    private Date createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

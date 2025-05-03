@@ -20,4 +20,6 @@ public class GetAllPostsResponse {
     private String userUsername;
     private Long userId;
 
+    private String userRole;
+
 }

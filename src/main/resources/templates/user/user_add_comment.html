@@ -3,54 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Comment</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e2e2e2, #c9d6ff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            resize: none;
+        }
+
+        .form-group textarea:focus {
+            border-color: #4a69bd;
+            box-shadow: 0 0 5px rgba(74, 105, 189, 0.5);
+        }
+
+        .form-group .text-danger {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .button-group button,
+        .button-group a {
+            display: inline-block;
+            text-align: center;
+            background: #4a69bd;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-group button:hover,
+        .button-group a:hover {
+            background: #3b5998;
+        }
+
+        .button-group a.btn-secondary {
+            background: #6c757d;
+        }
+
+        .button-group a.btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-group textarea {
+                font-size: 14px;
+            }
+
+            .button-group button,
+            .button-group a {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
-<style>
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background-color: #f4f4f4;
-        margin: 0;
-    }
-    .form-container {
-        width: 100%;
-        max-width: 600px;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-        background-color: #fff;
-    }
-    a {
-        text-decoration: none;
-    }
-</style>
 <body>
 
-<div class="container form-container">
-    <form action="#" th:action="@{/user/save-comment}" th:object="${addCommentRequest}" method="post">
+<div class="form-container">
+    <h2>Write Your Comment</h2>
 
-        <h2>Write Your Comment</h2>
-        <br>
+    <form action="#" th:action="@{/user/save-comment}" th:object="${addCommentRequest}" method="post">
         <input type="hidden" th:field="*{id}">
         <input type="hidden" th:field="*{postId}">
         <input type="hidden" th:field="*{userId}">
 
-        <div class="mb-3">
-            <textarea th:field="*{text}" class="form-control" placeholder="Comment Text(*)" rows="4"></textarea>
+        <div class="form-group">
+            <textarea th:field="*{text}" placeholder="Comment Text (*)" rows="4"></textarea>
             <span class="text-danger" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
         </div>
 
-        <br>
-        <div class="d-grid gap-2 m-3">
-            <button type="submit" class="btn btn-secondary">Save Comment</button>
+        <div class="button-group">
+            <button type="submit">Save Comment</button>
+            <a th:href="@{/user/view-comments(id=${addCommentRequest.postId})}" class="btn-secondary">Cancel</a>
         </div>
     </form>
-
-    <div class="d-grid gap-2 m-3">
-        <a th:href="@{/user/view-comments(id = ${addCommentRequest.postId})}" class="btn btn-secondary">Cancel</a>
-    </div>
 </div>
 
 </body>
