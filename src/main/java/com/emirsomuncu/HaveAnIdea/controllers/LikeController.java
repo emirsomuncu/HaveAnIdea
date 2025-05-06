@@ -25,44 +25,7 @@ import java.util.Optional;
 @RequestMapping
 public class LikeController {
 
-    private final UserService userService;
     private final LikeService likeService;
-    private final PostService postService;
-
-    @RequestMapping("/user/post-likes")
-    public String postLikes(@RequestParam Long postId) {
-
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = user.getUsername();
-        Optional<User> currentUser = this.userService.findUserByEmail(email);
-
-        this.likeService.saveLike(postId , currentUser.get().getId() );
-        return "redirect:/user/home";
-    }
-
-    @RequestMapping("/user/posts/post-likes")
-    public String profilePostLikes(@RequestParam Long postId) {
-
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = user.getUsername();
-        Optional<User> currentUser = this.userService.findUserByEmail(email);
-        this.likeService.saveLike(postId , currentUser.get().getId() );
-        GetPostByIdResponse post = this.postService.getPostById(postId);
-        String userId = post.getUserId();
-        return "redirect:/user/user-posts?userId=" + userId;
-    }
-
-    @RequestMapping("/user/topics-post-likes")
-    public String postLikeForFromTopicPage( Long postId  , String topicName) {
-
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = user.getUsername();
-        Optional<User> currentUser = this.userService.findUserByEmail(email);
-        this.likeService.saveLike(postId , currentUser.get().getId() );
-        String encodedTopicName = RedirectHelper.encodeUrlPathSegment(topicName);
-
-        return "redirect:/user/topic/" + encodedTopicName + "/posts";
-    }
 
     @GetMapping("/user/{postId}/likes")
     public String usersPostLikes(@PathVariable Long postId , Model model) {
