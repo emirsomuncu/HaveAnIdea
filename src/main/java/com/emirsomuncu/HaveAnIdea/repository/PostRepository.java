@@ -10,6 +10,6 @@ public interface PostRepository extends JpaRepository<Post , Long> {
     public List<Post> findPostByUserId(Long id);
     public List<Post> findAllByOrderByCreatedAtDesc();
     public List<Post> findPostByUserIdOrderByCreatedAtDesc(Long id);
-    public List<Post> findPostByTitle(String title);
+    public List<Post> findPostByTitleOrderByCreatedAtDesc(String title);
 
 }

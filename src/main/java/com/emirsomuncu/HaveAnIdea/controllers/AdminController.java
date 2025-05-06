@@ -8,6 +8,7 @@ import com.emirsomuncu.HaveAnIdea.service.abstracts.PostService;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.UserService;
 import com.emirsomuncu.HaveAnIdea.service.requests.SaveUserRequest;
 import com.emirsomuncu.HaveAnIdea.service.responses.user.GetAllUserResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByRoleResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByUsernameResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -153,6 +154,14 @@ public class AdminController {
         return "redirect:/admin/manage";
     }
 
+    @GetMapping("/admin/admin-list")
+    public String adminList(Model model) {
+
+        List<GetUserByRoleResponse> adminList = this.userService.getUserByRole("ADMIN,USER");
+        model.addAttribute("adminList" , adminList);
+
+        return "/admin/admin_list";
+    }
 
 
 }

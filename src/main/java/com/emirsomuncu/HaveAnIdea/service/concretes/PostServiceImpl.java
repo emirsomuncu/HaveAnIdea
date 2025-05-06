@@ -63,7 +63,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<GetAllPostsAccordingToTopic> getAllPostsAccordingToTopic(String topic) {
 
-        List<Post> postList = this.postRepository.findPostByTitle(topic);
+        List<Post> postList = this.postRepository.findPostByTitleOrderByCreatedAtDesc(topic);
         List<GetAllPostsAccordingToTopic> getAllPostsAccordingToTopics = postList.stream().map(post -> this.modelMapperService.forResponse().map(post , GetAllPostsAccordingToTopic.class)).collect(Collectors.toList());
         return getAllPostsAccordingToTopics;
     }
