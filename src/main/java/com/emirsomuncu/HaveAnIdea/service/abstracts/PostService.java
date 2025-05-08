@@ -8,6 +8,7 @@ import com.emirsomuncu.HaveAnIdea.service.responses.user.GetDesiredUserPostsByUs
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetPostByIdResponse;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PostService {
 
@@ -19,5 +20,9 @@ public interface PostService {
     public void deletePost(Long id);
     public void savePost(SavePostRequest savePostRequest);
     public Long countPosts();
+
+    public List<String> topicList();
+    public List<String> searchTopic(String topic);
+    public Map<String, Long> popularTopics();
 
 }

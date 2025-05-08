@@ -9,6 +9,7 @@ import com.emirsomuncu.HaveAnIdea.service.requests.SavePostRequest;
 import com.emirsomuncu.HaveAnIdea.service.requests.SaveUserRequest;
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsAccordingToTopic;
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByUsernameResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -73,16 +74,38 @@ public class PostController {
 
         List<GetAllPostsAccordingToTopic> posts = this.postService.getAllPostsAccordingToTopic(topicName);
 
-        Map<Long , Long> postLikeCounts = new HashMap<>();
-        for(GetAllPostsAccordingToTopic post : posts) {
+        Map<Long, Long> postLikeCounts = new HashMap<>();
+        for (GetAllPostsAccordingToTopic post : posts) {
             Long numberOfLikes = this.likeService.countLikes(post.getId());
-            postLikeCounts.put(post.getId() , numberOfLikes );
+            postLikeCounts.put(post.getId(), numberOfLikes);
         }
 
-        model.addAttribute("postLikeCounts" , postLikeCounts);
-        model.addAttribute("currentUser" , currentUser);
-        model.addAttribute("posts" , posts);
+        List<GetAllPostsAccordingToTopic> topicPosts = this.postService.getAllPostsAccordingToTopic(topicName);
+        Long count = 0L;
+        for (GetAllPostsAccordingToTopic topicPostsRunner : topicPosts) {
+            count++;
+        }
+
+        model.addAttribute("postCount", count);
+        model.addAttribute("postLikeCounts", postLikeCounts);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("posts", posts);
         return "/user/user_topics_posts";
+    }
+
+    @GetMapping("/search-topic")
+    public String searchTopic(@RequestParam(value = "topicName", required = false) String topicName, Model model) {
+
+        Map<String, Long> popularTopics = this.postService.popularTopics();
+        model.addAttribute("popularTopics", popularTopics);
+
+        if(topicName != null) {
+            List<String> topicList = this.postService.searchTopic(topicName); // boş liste dönmesini htmlde ele al
+            model.addAttribute("topicList", topicList );
+            model.addAttribute("topicName", topicName);
+        }
+
+        return "/user/user_search_topic";
     }
 
 }

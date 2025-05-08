@@ -15,5 +15,6 @@ public class GetAllPostsAccordingToTopic {
     private String createdAt ;
     private String userUsername;
     private Long userId;
+    private String userRole;
 
 }

@@ -13,8 +13,7 @@ import com.emirsomuncu.HaveAnIdea.service.rules.PostServiceImplRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -86,5 +85,49 @@ public class PostServiceImpl implements PostService {
         Long postCount = this.postRepository.count();
         return postCount;
     }
+
+    @Override
+    public List<String> topicList() {
+
+        List<String> topicList = new ArrayList<>();
+        List<Post> postList = this.postRepository.findAll();
+        for(Post postListRunner : postList ) {
+            String postTopic = postListRunner.getTitle();
+            topicList.add(postTopic);
+        }
+
+        return topicList;
+    }
+
+    @Override
+    public List<String> searchTopic(String topic) {
+        List<String> topicList = topicList();
+        List<String> result = new ArrayList<>();
+
+        for (String t : topicList) {
+            if (t.toLowerCase().contains(topic.toLowerCase()) && !result.contains(t)) {
+                result.add(t);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, Long> popularTopics() {
+        List<String> topicList = topicList();
+
+        return topicList.stream()
+                .collect(Collectors.groupingBy(topic -> topic, Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue(Comparator.reverseOrder()))
+                .limit(5)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+    }
+
 
 }

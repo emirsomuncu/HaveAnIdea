@@ -54,17 +54,21 @@
 
         .post-topic-header {
             width: 100%;
-            max-width: 900px; /* post-container ile aynı genişlik */
-            margin-bottom: 20px;
+            max-width: 900px;
+            margin: 0 auto 24px auto;
+            padding: 0 16px;
             text-align: left;
         }
 
         .post-topic-header h2 {
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            color: #222;
+            line-height: 1.2;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
         }
-
         .post-container {
             position: relative;
             background-color: #fff;
@@ -171,6 +175,57 @@
             color: #333;
             margin-left: 10px;
         }
+
+        .badge-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .admin-badge {
+            width: 24px;
+            height: 24px;
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .badge-tooltip {
+            visibility: hidden;
+            width: 60px;
+            background-color: #343a40;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+
+        .badge-wrapper:hover .badge-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .admin-btn {
+            position: fixed;
+            top: 0px;
+            right: 10px;
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            z-index: 9999;
+        }
+
+        .admin-btn:hover {
+            background-color: #ff0015;
+        }
     </style>
 </head>
 <body>
@@ -178,10 +233,11 @@
     <a th:href="@{/user/home}"> <h2> Home Page</h2> </a>
     <a th:href="@{/user/create-post}">Create Post</a>
     <a th:href="@{/user/search-user}">Search User</a>
+    <a th:href="@{/user/search-topic}">Search Topic</a>
     <a th:href="@{/user/profile(userId= ${currentUser.id})}">Profile</a>
     <a th:href="@{/chat-stream}">Ask AI</a>
     <div sec:authorize="hasRole('ADMIN')">
-        <a th:href="@{/admin/home}">Admin Page</a>
+        <a class="admin-btn" th:href="@{/admin/home}">Admin Page</a>
     </div>
     <a class="special" th:href="@{/logout}">Logout</a>
 </div>
@@ -190,7 +246,7 @@
 
     <div class="post-topic-header">
         <h2>
-            <span th:text="'Topic: ' + ${posts[0].title}"></span>
+            <span th:text="'Posts listed for the topic: ' + ${posts[0].title} + ' (' + ${postCount} + ' post)'"></span>
         </h2>
     </div>
 
@@ -206,6 +262,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                     </svg>
                     <a th:href="@{/user/profile(userId = ${posts.userId})}"> <span th:text="${posts.userUsername}"></span> </a>
+                    <span th:if="${posts.userRole.contains('ADMIN')}" class="badge-wrapper">
+                        <img src="/images/police-badge.jpg" alt="Admin Badge" class="admin-badge">
+                        <div class="badge-tooltip">Admin</div>
+                    </span>
                     <span th:text="'( Posted at : ' + ${posts.createdAt} + ' )' " > </span>
                 </span>
             </div>

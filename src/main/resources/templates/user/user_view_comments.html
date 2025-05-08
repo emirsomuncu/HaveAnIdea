@@ -241,6 +241,7 @@
     <a th:href="@{/user/home}"> <h2> Home Page</h2> </a>
     <a th:href="@{/user/create-post}">Create Post</a>
     <a th:href="@{/user/search-user}">Search User</a>
+    <a th:href="@{/user/search-topic}">Search Topic</a>
     <a th:href="@{/user/profile(userId= ${currentUser.get().id})}">Profile</a>
     <a th:href="@{/chat-stream}">Ask AI</a>
     <div sec:authorize="hasRole('ADMIN')">
