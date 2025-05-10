@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Posts</title>
+    <title>Topics' Posts</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,6 +61,31 @@
             background-color: #ff0000;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Back to Manage Page button */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
         .no-post-box {
             background-color: #a80224;
             color: #ffffff;
@@ -83,42 +108,24 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .back-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .back-button:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
 
-<a class="back-button" th:href="@{/admin/manage-user}">Back to Manage Page</a>
+<a class="back-button" th:href="@{/admin/manage-topic}">Back to Manage Page</a>
 
 <div class="container">
-    <h1>Posts</h1>
+    <h1 th:text="'Posts listed under the topic: ' + ${topicName}"></h1>
 
-    <div th:if="${#lists.isEmpty(postList)}" class="no-post-box">
+    <div th:if="${#lists.isEmpty(posts)}" class="no-post-box">
         <div class="no-post-icon">😢</div>
         <h4>There are no posts available</h4>
     </div>
 
-    <div th:if="${!#lists.isEmpty(postList)}">
-        <div th:each="post : ${postList}" class="post">
-            <a class="delete-button" th:href="@{/admin/delete-post(id=${post.id}, userId=${post.user.id})}">Delete Post</a>
-            <div class="post-id" th:text="'(Owner of the post is ' + ${post.user.username} + ' , User ID: ' + ${post.user.id} + ' , Post ID: ' + ${post.id} + ')'"></div>
+    <div th:if="${!#lists.isEmpty(posts)}">
+        <div th:each="post : ${posts}" class="post">
+            <a class="delete-button" th:href="@{/admin/delete-topic-post(id=${post.id})}">Delete Post</a>
+            <div class="post-id" th:text="'(Owner of the post is ' + ${post.userUsername} + ' , User ID: ' + ${post.userId} + ' , Post ID: ' + ${post.id} + ')' "></div>
             <div class="post-title" th:text="'Topic: ' + ${post.title}"></div>
             <div class="post-text" th:text="${post.text}"></div>
         </div>

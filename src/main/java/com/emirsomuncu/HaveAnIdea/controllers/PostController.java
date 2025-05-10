@@ -100,7 +100,9 @@ public class PostController {
         model.addAttribute("popularTopics", popularTopics);
 
         if(topicName != null) {
-            List<String> topicList = this.postService.searchTopic(topicName); // boş liste dönmesini htmlde ele al
+
+            List<String> topicList = this.postService.searchTopic(topicName);
+
             model.addAttribute("topicList", topicList );
             model.addAttribute("topicName", topicName);
         }

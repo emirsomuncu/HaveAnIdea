@@ -82,6 +82,23 @@
             color: #555;
             margin-bottom: 20px;
         }
+        .no-result-card {
+            background-color: #f0f0f0;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            font-size: 18px;
+            margin-top: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .no-result-card:hover {
+            background-color: #e2e2e2;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -101,6 +118,9 @@
 </div>
 <div th:if="${userList != null}" class="user-section">
     <h2>Search Results</h2>
+    <div th:if="${#lists.isEmpty(userList)}" class="no-result-card">
+        <p>There is no result ! </p>
+    </div>
     <div th:each="user : ${userList}" class="user-card">
         <a th:href="@{/user/profile(userId=${user.id})}" th:text="${user.username}"></a>
     </div>

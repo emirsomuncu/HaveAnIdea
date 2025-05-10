@@ -9,6 +9,7 @@
             background-color: #e6ecf0;
             margin: 0;
             padding: 0;
+            position: relative;
         }
 
         .container {
@@ -53,6 +54,7 @@
         .delete-button:hover {
             background-color: #ff0000;
         }
+
         .no-comments-box {
             background-color: #a80224;
             color: #ffffff;
@@ -75,9 +77,31 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        /* Back to Manage Page button */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
+
+<a class="back-button" th:href="@{/admin/manage-user}">Back to Manage Page</a>
 
 <div class="container">
     <h1>Comments</h1>
@@ -89,8 +113,8 @@
 
     <div th:if="${!#lists.isEmpty(commentList)}">
         <div th:each="comment : ${commentList}" class="comment">
-            <a class="delete-button" th:href="@{/admin/delete-post(id=${comment.id})}">Delete Comment</a>
-            <div class="comment-id" th:text="'(Owner of the commnet is ' + ${comment.user.username} + ' , User ID: ' + ${comment.user.id} + ' , Post ID: ' + ${comment.post.id} + ')' "></div>
+            <a class="delete-button" th:href="@{/admin/delete-comment(id=${comment.id}, userId=${comment.user.id})}">Delete Comment</a>
+            <div class="comment-id" th:text="'(Owner of the comment is ' + ${comment.user.username} + ' , User ID: ' + ${comment.user.id} + ' , Post ID: ' + ${comment.post.id} + ')'"></div>
             <div class="comment-text" th:text="${comment.text}"></div>
         </div>
     </div>

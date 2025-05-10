@@ -7,6 +7,8 @@ import com.emirsomuncu.HaveAnIdea.service.abstracts.CommentService;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.PostService;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.UserService;
 import com.emirsomuncu.HaveAnIdea.service.requests.SaveUserRequest;
+import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsAccordingToTopic;
+import com.emirsomuncu.HaveAnIdea.service.responses.post.GetPostByIdResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.user.GetAllUserResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByRoleResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByUsernameResponse;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -57,15 +60,15 @@ public class AdminController {
     }
 
 
-    @GetMapping("/admin/manage")
-    public String adminManagePage(@RequestParam(value = "name" , required = false) String name , Model model) {
+    @GetMapping("/admin/manage-user")
+    public String adminManageUser(@RequestParam(value = "name" , required = false) String name , Model model) {
 
         if( name != null ) {
 
             List<GetUserByUsernameResponse> getUserByUsernameResponse = this.userService.getUserByUsername(name);
             model.addAttribute("name" , name);
             model.addAttribute("getUserByUsernameResponse" , getUserByUsernameResponse);
-            return "/admin/admin_manage_search";
+            return "/admin/admin_manage_user_search";
         }
 
         else{
@@ -74,7 +77,7 @@ public class AdminController {
 
         }
 
-        return "/admin/admin_manage";
+        return "/admin/admin_manage_users";
     }
 
     @GetMapping("/admin/delete-user")
@@ -82,7 +85,7 @@ public class AdminController {
 
         this.userService.deleteUser(id);
 
-        return "redirect:/admin/manage";
+        return "redirect:/admin/manage-user";
     }
 
     @GetMapping("/admin/view-desired-user-post")
@@ -95,10 +98,10 @@ public class AdminController {
     }
 
     @RequestMapping("/admin/delete-post")
-    public String deletePost(Long id) {
+    public String deletePost(@RequestParam Long id , @RequestParam Long userId) {
 
         this.postService.deletePost(id);
-        return "redirect:/admin/manage";
+        return "redirect:/admin/view-desired-user-post?id=" + userId;
     }
 
 
@@ -112,10 +115,62 @@ public class AdminController {
     }
 
     @RequestMapping("/admin/delete-comment")
-    public String deleteComment(@RequestParam Long id) {
+    public String deleteComment(@RequestParam Long id , @RequestParam Long userId) {
 
         this.commentService.deleteComment(id);
-        return "redirect:/admin/manage";
+        return "redirect:/admin/view-desired-user-comment?id=" + userId;
+    }
+
+    @GetMapping("/admin/manage-topic")
+    public String adminManageTopic(@RequestParam(value = "topicName" , required = false) String topicName , Model model) {
+
+        if( topicName != null ) {
+
+            List<String> searchedTopicList = this.postService.searchTopic(topicName);
+            model.addAttribute("topicName" , topicName);
+            model.addAttribute("topicList" , searchedTopicList);
+            return "/admin/admin_manage_topic_search";
+        }
+
+        else{
+            List<String> uniqueTopicList = this.postService.topicList()
+                    .stream()
+                    .distinct()
+                    .collect(Collectors.toList());
+            model.addAttribute("uniqueTopicList" , uniqueTopicList) ;
+        }
+
+        return "/admin/admin_manage_topics";
+    }
+
+    @GetMapping("/admin/view-desired-topic-posts")
+    public String desiredTopicPosts(@RequestParam String topicName , Model model) {
+
+        List<GetAllPostsAccordingToTopic> topicsPosts = this.postService.getAllPostsAccordingToTopic(topicName);
+        model.addAttribute("topicName" , topicName);
+        model.addAttribute("posts" , topicsPosts);
+        return "/admin/admin_desired_topic_posts";
+    }
+
+    @RequestMapping("/admin/delete-topic-post")
+    public String deleteDesiredTopicPosts(@RequestParam Long id) {
+
+        GetPostByIdResponse post = this.postService.getPostById(id);
+        String topicName = post.getTitle();
+        this.postService.deletePost(id);
+
+        return "redirect:/admin/view-desired-topic-posts?topicName=" + topicName;
+    }
+
+    @RequestMapping("/admin/delete-topic")
+    public String deleteTopicAndTopicsPosts(@RequestParam String topicName) {
+
+        List<GetAllPostsAccordingToTopic> postList = this.postService.getAllPostsAccordingToTopic(topicName);
+        for(GetAllPostsAccordingToTopic postListRunner : postList) {
+            this.postService.deletePost(postListRunner.getId());
+        }
+
+        return "redirect:/admin/manage-topic";
     }
 
 
