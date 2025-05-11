@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +41,7 @@ public class HomeController {
     }
 
     @GetMapping("/user/home")
-    public String userHomePage(Model model) {
+    public String userHomePage(@RequestParam(value = "highlightedPostId", required = false) Long highlightedPostId , Model model) {
 
         List<GetAllPostsResponse> getAllPostsResponses = this.postService.getAllPosts();
         model.addAttribute("getAllPostsResponses", getAllPostsResponses);
@@ -57,6 +58,8 @@ public class HomeController {
         }
 
         model.addAttribute("postLikeCounts" , postLikeCounts);
+
+        model.addAttribute("highlightedPostId", highlightedPostId);
 
         return "/user/user_home";
     }

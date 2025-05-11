@@ -73,7 +73,8 @@ public class CommentController {
             this.commentService.saveComment(addCommentRequest);
         }
         Long postId = addCommentRequest.getPostId();
-        return "redirect:/user/view-comments?id=" + postId;
+
+        return "redirect:/user/home?highlightedPostId=" + postId;
     }
 
     @RequestMapping("/delete-comment")
