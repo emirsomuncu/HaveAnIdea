@@ -1,5 +1,6 @@
 package com.emirsomuncu.HaveAnIdea.controllers;
 
+import com.emirsomuncu.HaveAnIdea.entities.Comment;
 import com.emirsomuncu.HaveAnIdea.entities.User;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.CommentService;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.PostService;
@@ -85,4 +86,13 @@ public class CommentController {
         return "redirect:/user/view-comments?id=" + postId;
     }
 
+    @RequestMapping("/delete-profile-comment")
+    public String deleteCommentFromProfile(@RequestParam Long id) {
+
+        GetCommentByIdResponse comment = this.commentService.getCommentById(id);
+        Long userId = comment.getUserId();
+        this.commentService.deleteComment(id);
+
+        return "redirect:/user/user-comments?userId=" + userId ;
+    }
 }

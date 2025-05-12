@@ -137,7 +137,7 @@
     <th:block th:each="comments : ${commentList}">
         <div class="comment-container">
             <div th:if="${comments.userId} == ${currentUser.get().id}">
-                <a th:href="@{/user/delete-comment(id=${comments.id})}" class="delete-btn">Delete</a>
+                <a th:href="@{/user/delete-profile-comment(id=${comments.id})}" class="delete-btn">Delete</a>
             </div>
             <div class="comment-header">
                 <span>

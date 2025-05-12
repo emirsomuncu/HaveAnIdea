@@ -192,7 +192,7 @@
     <th:block th:each="posts : ${postList}">
         <div class="post-container">
             <div th:if="${posts.userId} == ${currentUser.get().id}">
-                <a th:href="@{/user/delete-post(id=${posts.id})}" class="delete-btn">Delete</a>
+                <a th:href="@{/user/delete-profile-post(id=${posts.id})}" class="delete-btn">Delete</a>
             </div>
 
             <div class="post-header">

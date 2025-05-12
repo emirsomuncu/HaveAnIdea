@@ -12,5 +12,6 @@ public class GetCommentByIdResponse {
     private Long id ;
     private String text ;
     private Long postId;
+    private Long userId;
 
 }

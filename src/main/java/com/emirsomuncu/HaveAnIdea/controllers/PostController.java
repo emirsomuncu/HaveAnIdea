@@ -1,5 +1,6 @@
 package com.emirsomuncu.HaveAnIdea.controllers;
 
+import com.emirsomuncu.HaveAnIdea.entities.Post;
 import com.emirsomuncu.HaveAnIdea.entities.User;
 import com.emirsomuncu.HaveAnIdea.repository.UserRepository;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.LikeService;
@@ -9,6 +10,7 @@ import com.emirsomuncu.HaveAnIdea.service.requests.SavePostRequest;
 import com.emirsomuncu.HaveAnIdea.service.requests.SaveUserRequest;
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsAccordingToTopic;
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsResponse;
+import com.emirsomuncu.HaveAnIdea.service.responses.post.GetPostByIdResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByUsernameResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +67,29 @@ public class PostController {
     public String deletePost(@RequestParam Long id) {
         this.postService.deletePost(id);
         return "redirect:/user/home";
+    }
+
+    @RequestMapping("/delete-profile-post")
+    public String deletePostFromProfile(@RequestParam Long id) {
+
+        GetPostByIdResponse post = this.postService.getPostById(id);
+        Long userId = Long.valueOf(post.getUserId());
+
+        this.postService.deletePost(id);
+        return "redirect:/user/user-posts?userId=" + userId ;
+    }
+
+    @RequestMapping("/delete-topic-post")
+    public String deleteTopicPost(@RequestParam Long id) {
+
+        GetPostByIdResponse post = this.postService.getPostById(id);
+        Long userId = Long.valueOf(post.getUserId());
+        String topic = post.getTitle();
+        String encodedTopic = URLEncoder.encode(topic, StandardCharsets.UTF_8);
+
+        this.postService.deletePost(id);
+        return "redirect:/user/topic/" + encodedTopic + "/posts";
+
     }
 
     @GetMapping("/topic/{topicName}/posts")
