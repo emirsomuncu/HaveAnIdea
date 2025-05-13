@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor()
@@ -64,10 +61,39 @@ public class PostController {
     }
 
     @RequestMapping("/delete-post")
-    public String deletePost(@RequestParam Long id) {
+    public String deleteHomePost(@RequestParam Long id) {
+
+        GetPostByIdResponse postToDelete = this.postService.getPostById(id);
+
+        if (postToDelete == null) {
+            return "redirect:/user/home";
+        }
+
+        Date deletedPostCreatedAt = postToDelete.getCreatedAt();
+
+        List<GetAllPostsResponse> allPosts = this.postService.getAllPosts();
+        GetAllPostsResponse closestPost = null;
+        long minDiff = Long.MAX_VALUE;
+
+        for (GetAllPostsResponse post : allPosts) {
+            if (post.getId().equals(id)) continue;
+
+            long diff = Math.abs(post.getCreatedAt().getTime() - deletedPostCreatedAt.getTime());
+            if (diff < minDiff) {
+                minDiff = diff;
+                closestPost = post;
+            }
+        }
+
         this.postService.deletePost(id);
+
+        if (closestPost != null) {
+            return "redirect:/user/home?highlightedPostId=" + closestPost.getId();
+        }
+
         return "redirect:/user/home";
     }
+
 
     @RequestMapping("/delete-profile-post")
     public String deletePostFromProfile(@RequestParam Long id) {

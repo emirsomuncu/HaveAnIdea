@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.aspectj.lang.annotation.AfterReturning;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +18,7 @@ public class GetAllPostsResponse {
     private Long id ;
     private String title;
     private String text ;
-    private String createdAt ;
+    private Date createdAt ;
     private String userUsername;
     private Long userId;
 
