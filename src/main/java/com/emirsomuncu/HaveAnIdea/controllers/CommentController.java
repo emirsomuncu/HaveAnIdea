@@ -83,7 +83,7 @@ public class CommentController {
         GetCommentByIdResponse getCommentByIdResponse = this.commentService.getCommentById(id);
         Long postId = getCommentByIdResponse.getPostId();
         this.commentService.deleteComment(id);
-        return "redirect:/user/view-comments?id=" + postId;
+        return "redirect:/user/home?highlightedPostId=" + postId;
     }
 
     @RequestMapping("/delete-profile-comment")

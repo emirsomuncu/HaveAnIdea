@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Topic Posts</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,6 +69,7 @@
             padding-bottom: 8px;
             margin-bottom: 12px;
         }
+
         .post-container {
             position: relative;
             background-color: #fff;
@@ -226,6 +227,30 @@
         .admin-btn:hover {
             background-color: #ff0015;
         }
+
+        .no-post-box {
+            background-color: #a80224;
+            color: #ffffff;
+            border: 1px solid #ffeeba;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 22px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease;
+            margin: 100px auto 0 auto;
+        }
+
+        .no-post-icon {
+            font-size: 50px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -244,7 +269,12 @@
 
 <div class="main-content">
 
-    <div class="post-topic-header">
+    <div th:if="${#lists.isEmpty(posts)}" class="no-post-box">
+        <div class="no-post-icon">😢</div>
+        <h4>There is no post for this topic.</h4>
+    </div>
+
+    <div class="post-topic-header" th:if="${not #lists.isEmpty(posts)}">
         <h2>
             <span th:text="'Posts listed for the topic: ' + ${posts[0].title} + ' (' + ${postCount} + ' post)'"></span>
         </h2>

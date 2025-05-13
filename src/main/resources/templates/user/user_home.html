@@ -216,6 +216,29 @@
             visibility: visible;
             opacity: 1;
         }
+        .no-post-box {
+            background-color: #a80224;
+            color: #ffffff;
+            border: 1px solid #ffeeba;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 22px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease;
+            margin: 100px auto 0 auto;
+        }
+
+        .no-post-icon {
+            font-size: 50px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -234,6 +257,12 @@
 </div>
 
 <div class="main-content">
+
+    <div th:if="${#lists.isEmpty(getAllPostsResponses)}" class="no-post-box">
+        <div class="no-post-icon">😢</div>
+        <h4>There is no post on application.</h4>
+    </div>
+
     <th:block th:each="posts : ${getAllPostsResponses}">
         <div class="post-container" th:attr="id='post-' + ${posts.id}">
             <div th:if="${posts.userId} == ${currentUser.get().id}">

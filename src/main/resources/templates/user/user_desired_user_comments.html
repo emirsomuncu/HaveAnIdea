@@ -131,7 +131,7 @@
 
     <div th:if="${#lists.isEmpty(commentList)}" class="no-comments-box">
         <div class="no-comments-icon">😢</div>
-        <h4>There are no comments from this user</h4>
+        <h4>There is no comment from this user</h4>
     </div>
 
     <th:block th:each="comments : ${commentList}">
