@@ -119,6 +119,10 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        .highlighted {
+            box-shadow: 0 0 20px 5px rgba(29, 161, 242, 0.7);
+            transition: box-shadow 0.5s ease;
+        }
     </style>
 </head>
 <body>
@@ -130,12 +134,12 @@
 <div class="main-content">
 
     <div th:if="${#lists.isEmpty(commentList)}" class="no-comments-box">
-        <div class="no-comments-icon">😢</div>
+        <div class="no-comments-icon">💬</div>
         <h4>There is no comment from this user</h4>
     </div>
 
     <th:block th:each="comments : ${commentList}">
-        <div class="comment-container">
+        <div class="comment-container" th:attr="id=${'comment-' + comments.id}">
             <div th:if="${comments.userId} == ${currentUser.get().id}">
                 <a th:href="@{/user/delete-profile-comment(id=${comments.id})}" class="delete-btn">Delete</a>
             </div>
@@ -155,6 +159,21 @@
         </div>
     </th:block>
 </div>
-
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const highlightedCommentId = urlParams.get('highlightedCommentId');
+        if (highlightedCommentId) {
+            const postElement = document.getElementById('comment-' + highlightedCommentId);
+            if (postElement) {
+                postElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                postElement.classList.add('highlighted');
+                setTimeout(() => {
+                    postElement.classList.remove('highlighted');
+                }, 3000);
+            }
+        }
+    });
+</script>
 </body>
 </html>

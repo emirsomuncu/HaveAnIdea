@@ -94,28 +94,73 @@ public class PostController {
         return "redirect:/user/home";
     }
 
-
     @RequestMapping("/delete-profile-post")
     public String deletePostFromProfile(@RequestParam Long id) {
 
-        GetPostByIdResponse post = this.postService.getPostById(id);
-        Long userId = Long.valueOf(post.getUserId());
+        GetPostByIdResponse postToDelete = this.postService.getPostById(id);
+        Long userId = Long.valueOf(postToDelete.getUserId());
+
+        Date deletedPostCreatedAt = postToDelete.getCreatedAt();
+
+        List<Post> allPosts = this.postService.getPostByUserId(userId);
+        Post closestPost = null;
+        long minDiff = Long.MAX_VALUE;
+
+        for (Post post : allPosts) {
+            if (post.getId().equals(id)) continue;
+
+            long diff = Math.abs(post.getCreatedAt().getTime() - deletedPostCreatedAt.getTime());
+            if (diff < minDiff) {
+                minDiff = diff;
+                closestPost = post;
+            }
+        }
 
         this.postService.deletePost(id);
-        return "redirect:/user/user-posts?userId=" + userId ;
+
+        if (closestPost != null) {
+            return "redirect:/user/user-posts?highlightedPostId=" + closestPost.getId() + "&userId=" + userId;
+
+        }
+
+        return "redirect:/user/user-posts?userId=" + userId;
     }
 
     @RequestMapping("/delete-topic-post")
     public String deleteTopicPost(@RequestParam Long id) {
 
-        GetPostByIdResponse post = this.postService.getPostById(id);
-        Long userId = Long.valueOf(post.getUserId());
-        String topic = post.getTitle();
+        GetPostByIdResponse postToDelete = this.postService.getPostById(id);
+
+        if (postToDelete == null) {
+            return "redirect:/user/view-comments";
+        }
+
+        Date deletedPostCreatedAt = postToDelete.getCreatedAt();
+
+        List<GetAllPostsResponse> allPosts = this.postService.getAllPosts();
+        GetAllPostsResponse closestPost = null;
+        long minDiff = Long.MAX_VALUE;
+
+        for (GetAllPostsResponse post : allPosts) {
+            if (post.getId().equals(id)) continue;
+
+            long diff = Math.abs(post.getCreatedAt().getTime() - deletedPostCreatedAt.getTime());
+            if (diff < minDiff) {
+                minDiff = diff;
+                closestPost = post;
+            }
+        }
+
+        Long userId = Long.valueOf(postToDelete.getUserId());
+        String topic = postToDelete.getTitle();
         String encodedTopic = URLEncoder.encode(topic, StandardCharsets.UTF_8);
-
         this.postService.deletePost(id);
-        return "redirect:/user/topic/" + encodedTopic + "/posts";
 
+        if (closestPost != null) {
+            return "redirect:/user/topic/" + encodedTopic + "/posts?highlightedPostId=" + closestPost.getId();
+        }
+
+        return "redirect:/user/view-comments";
     }
 
     @GetMapping("/topic/{topicName}/posts")

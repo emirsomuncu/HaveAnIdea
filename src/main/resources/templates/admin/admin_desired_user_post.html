@@ -35,8 +35,8 @@
         }
 
         .post-title {
-            font-weight: bold;
             font-size: 1.2em;
+            font-weight: bold;
             margin-bottom: 10px;
         }
 
@@ -61,7 +61,7 @@
             background-color: #ff0000;
         }
 
-        .no-post-box {
+        .no-posts-box {
             background-color: #a80224;
             color: #ffffff;
             border: 1px solid #ffeeba;
@@ -75,7 +75,7 @@
             margin-top: 100px;
         }
 
-        .no-post-icon {
+        .no-posts-icon {
             font-size: 50px;
         }
 
@@ -83,6 +83,7 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
         .back-button {
             position: absolute;
             top: 20px;
@@ -101,6 +102,11 @@
         .back-button:hover {
             background-color: #0056b3;
         }
+        .highlighted {
+            border: 2px solid orange;
+            background-color: #fff8e1;
+            transition: background-color 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -110,20 +116,40 @@
 <div class="container">
     <h1>Posts</h1>
 
-    <div th:if="${#lists.isEmpty(postList)}" class="no-post-box">
-        <div class="no-post-icon">😢</div>
+    <div th:if="${#lists.isEmpty(postList)}" class="no-posts-box">
+        <div class="no-posts-icon">😢</div>
         <h4>There are no posts available</h4>
     </div>
 
     <div th:if="${!#lists.isEmpty(postList)}">
-        <div th:each="post : ${postList}" class="post">
-            <a class="delete-button" th:href="@{/admin/delete-post(id=${post.id}, userId=${post.user.id})}">Delete Post</a>
-            <div class="post-id" th:text="'(Owner of the post is ' + ${post.user.username} + ' , User ID: ' + ${post.user.id} + ' , Post ID: ' + ${post.id} + ')'"></div>
-            <div class="post-title" th:text="'Topic: ' + ${post.title}"></div>
+        <div th:each="post : ${postList}"
+             class="post"
+             th:attr="id=${'post-' + post.id}">
+            <a class="delete-button"
+               th:href="@{/admin/delete-post(id=${post.id}, userId=${post.user.id})}">Delete Post</a>
+            <div class="post-id"
+                 th:text="'(Owner of the post is ' + ${post.user.username} + ' , User ID: ' + ${post.user.id} + ')'">
+            </div>
+            <div class="post-title" th:text="${post.title}"></div>
             <div class="post-text" th:text="${post.text}"></div>
         </div>
     </div>
 </div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const highlightedId = params.get('highlightedPostId');
+        if (highlightedId) {
+            const el = document.getElementById('post-' + highlightedId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('highlighted');
+                setTimeout(() => el.classList.remove('highlighted'), 3000);
+            }
+        }
+    });
+</script>
 
 </body>
 </html>

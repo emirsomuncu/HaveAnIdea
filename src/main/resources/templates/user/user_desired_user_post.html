@@ -171,7 +171,10 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
+        .highlighted {
+            box-shadow: 0 0 20px 5px rgba(29, 161, 242, 0.7);
+            transition: box-shadow 0.5s ease;
+        }
     </style>
 </head>
 <body>
@@ -190,7 +193,7 @@
     </div>
 
     <th:block th:each="posts : ${postList}">
-        <div class="post-container">
+        <div class="post-container" th:attr="id=${'post-' + posts.id}">
             <div th:if="${posts.userId} == ${currentUser.get().id}">
                 <a th:href="@{/user/delete-profile-post(id=${posts.id})}" class="delete-btn">Delete</a>
             </div>
@@ -263,6 +266,21 @@
             })
             .catch(error => console.error('Error:', error));
     }
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const highlightedPostId = urlParams.get('highlightedPostId');
+        if (highlightedPostId) {
+            const postElement = document.getElementById('post-' + highlightedPostId);
+            if (postElement) {
+                postElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                postElement.classList.add('highlighted');
+                setTimeout(() => {
+                    postElement.classList.remove('highlighted');
+                }, 3000);
+            }
+        }
+    });
 </script>
 </body>
 </html>

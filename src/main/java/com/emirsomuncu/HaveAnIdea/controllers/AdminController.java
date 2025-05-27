@@ -7,7 +7,9 @@ import com.emirsomuncu.HaveAnIdea.service.abstracts.CommentService;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.PostService;
 import com.emirsomuncu.HaveAnIdea.service.abstracts.UserService;
 import com.emirsomuncu.HaveAnIdea.service.requests.SaveUserRequest;
+import com.emirsomuncu.HaveAnIdea.service.responses.comment.GetCommentByIdResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsAccordingToTopic;
+import com.emirsomuncu.HaveAnIdea.service.responses.post.GetAllPostsResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.post.GetPostByIdResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.user.GetAllUserResponse;
 import com.emirsomuncu.HaveAnIdea.service.responses.user.GetUserByRoleResponse;
@@ -21,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -89,10 +92,11 @@ public class AdminController {
     }
 
     @GetMapping("/admin/view-desired-user-post")
-    public String viewDesiredUserPost(@RequestParam Long id , Model model) {
+    public String viewDesiredUserPost(@RequestParam Long id , Model model , @RequestParam(required = false) Long highlightedPostId) {
 
         List<Post> postList = this.postService.getPostByUserId(id);
         model.addAttribute("postList", postList) ;
+        model.addAttribute("highlightedPostId" , highlightedPostId);
 
         return "/admin/admin_desired_user_post";
     }
@@ -100,16 +104,41 @@ public class AdminController {
     @RequestMapping("/admin/delete-post")
     public String deletePost(@RequestParam Long id , @RequestParam Long userId) {
 
+        GetPostByIdResponse postToDelete = this.postService.getPostById(id);
+
+        Date deletedPostCreatedAt = postToDelete.getCreatedAt();
+
+        List<GetAllPostsResponse> allPosts = this.postService.getAllPosts();
+        GetAllPostsResponse closestPost = null;
+        long minDiff = Long.MAX_VALUE;
+
+        for (GetAllPostsResponse post : allPosts) {
+            if (post.getId().equals(id)) continue;
+
+            long diff = Math.abs(post.getCreatedAt().getTime() - deletedPostCreatedAt.getTime());
+            if (diff < minDiff) {
+                minDiff = diff;
+                closestPost = post;
+            }
+        }
+
         this.postService.deletePost(id);
+
+        if (closestPost != null) {
+            return "redirect:/admin/view-desired-user-post?highlightedPostId=" + closestPost.getId() + "&id=" + userId;
+
+        }
+
         return "redirect:/admin/view-desired-user-post?id=" + userId;
     }
 
 
     @GetMapping("/admin/view-desired-user-comment")
-    public String viewDesiredUserComments(@RequestParam Long id , Model model) {
+    public String viewDesiredUserComments(@RequestParam Long id , @RequestParam(required = false) Long highlightedCommentId , Model model) {
 
         List<Comment> commentList = this.commentService.getCommentsByUserId(id);
         model.addAttribute("commentList", commentList) ;
+        model.addAttribute("highlightedCommentId", highlightedCommentId);
 
         return "/admin/admin_desired_user_comments";
     }
@@ -117,7 +146,29 @@ public class AdminController {
     @RequestMapping("/admin/delete-comment")
     public String deleteComment(@RequestParam Long id , @RequestParam Long userId) {
 
+        GetCommentByIdResponse commentToDelete = this.commentService.getCommentById(id);
+        Date deletedCommentCreatedAt = commentToDelete.getCreatedAt();
+
+        List<Comment> allComments = this.commentService.getCommentsByUserId(userId);
+        Comment closestComment = null;
+        long minDiff = Long.MAX_VALUE;
+
+        for (Comment comment : allComments) {
+            if (comment.getId().equals(id)) continue;
+
+            long diff = Math.abs(comment.getCreatedAt().getTime() - deletedCommentCreatedAt.getTime());
+            if (diff < minDiff) {
+                minDiff = diff;
+                closestComment = comment;
+            }
+        }
+
         this.commentService.deleteComment(id);
+
+        if (closestComment != null) {
+            return "redirect:/admin/view-desired-user-comment?highlightedCommentId=" + closestComment.getId() + "&id=" + userId;
+
+        }
         return "redirect:/admin/view-desired-user-comment?id=" + userId;
     }
 
@@ -144,20 +195,45 @@ public class AdminController {
     }
 
     @GetMapping("/admin/view-desired-topic-posts")
-    public String desiredTopicPosts(@RequestParam String topicName , Model model) {
+    public String desiredTopicPosts(@RequestParam String topicName , @RequestParam(required = false) Long highlightedPostId , Model model) {
 
         List<GetAllPostsAccordingToTopic> topicsPosts = this.postService.getAllPostsAccordingToTopic(topicName);
         model.addAttribute("topicName" , topicName);
         model.addAttribute("posts" , topicsPosts);
+        model.addAttribute("highlightedPostId" , highlightedPostId);
         return "/admin/admin_desired_topic_posts";
     }
 
     @RequestMapping("/admin/delete-topic-post")
     public String deleteDesiredTopicPosts(@RequestParam Long id) {
 
-        GetPostByIdResponse post = this.postService.getPostById(id);
-        String topicName = post.getTitle();
+
+        GetPostByIdResponse postToDelete = this.postService.getPostById(id);
+        String topicName = postToDelete.getTitle();
+
+        Date deletedPostCreatedAt = postToDelete.getCreatedAt();
+
+        List<GetAllPostsResponse> allPosts = this.postService.getAllPosts();
+        GetAllPostsResponse closestPost = null;
+        long minDiff = Long.MAX_VALUE;
+
+        for (GetAllPostsResponse post : allPosts) {
+            if (post.getId().equals(id)) continue;
+
+            long diff = Math.abs(post.getCreatedAt().getTime() - deletedPostCreatedAt.getTime());
+            if (diff < minDiff) {
+                minDiff = diff;
+                closestPost = post;
+            }
+        }
+
         this.postService.deletePost(id);
+
+        if (closestPost != null) {
+            return "redirect:/admin/view-desired-topic-posts?topicName=" + topicName + "&highlightedPostId=" + closestPost.getId();
+
+        }
+
 
         return "redirect:/admin/view-desired-topic-posts?topicName=" + topicName;
     }

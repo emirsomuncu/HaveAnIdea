@@ -18,7 +18,7 @@
             padding-top: 20px;
         }
 
-        .comment {
+        .post {
             position: relative;
             border: 1px solid #ccc;
             padding: 15px;
@@ -28,13 +28,13 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
         }
 
-        .comment-id {
+        .post-id {
             font-size: 0.9em;
             color: #657786;
             margin-bottom: 10px;
         }
 
-        .comment-text {
+        .post-text {
             font-size: 1em;
             color: #333;
         }
@@ -49,13 +49,14 @@
             border-radius: 5px;
             padding: 5px 10px;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .delete-button:hover {
             background-color: #ff0000;
         }
 
-        .no-comments-box {
+        .no-posts-box {
             background-color: #a80224;
             color: #ffffff;
             border: 1px solid #ffeeba;
@@ -69,7 +70,7 @@
             margin-top: 100px;
         }
 
-        .no-comments-icon {
+        .no-posts-icon {
             font-size: 50px;
         }
 
@@ -78,7 +79,6 @@
             to { opacity: 1; }
         }
 
-        /* Back to Manage Page button */
         .back-button {
             position: absolute;
             top: 20px;
@@ -97,6 +97,11 @@
         .back-button:hover {
             background-color: #0056b3;
         }
+        .highlighted {
+            border: 2px solid orange;
+            background-color: #fff8e1;
+            transition: background-color 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -106,19 +111,38 @@
 <div class="container">
     <h1>Comments</h1>
 
-    <div th:if="${#lists.isEmpty(commentList)}" class="no-comments-box">
-        <div class="no-comments-icon">😢</div>
+    <div th:if="${#lists.isEmpty(commentList)}" class="no-posts-box">
+        <div class="no-posts-icon">💬</div>
         <h4>There are no comments available</h4>
     </div>
 
     <div th:if="${!#lists.isEmpty(commentList)}">
-        <div th:each="comment : ${commentList}" class="comment">
-            <a class="delete-button" th:href="@{/admin/delete-comment(id=${comment.id}, userId=${comment.user.id})}">Delete Comment</a>
-            <div class="comment-id" th:text="'(Owner of the comment is ' + ${comment.user.username} + ' , User ID: ' + ${comment.user.id} + ' , Post ID: ' + ${comment.post.id} + ')'"></div>
-            <div class="comment-text" th:text="${comment.text}"></div>
+        <div th:each="comment : ${commentList}"
+             class="post"
+             th:attr="id=${'comment-' + comment.id}">
+            <a class="delete-button"
+               th:href="@{/admin/delete-comment(id=${comment.id}, userId=${comment.user.id})}">Delete Comment</a>
+            <div class="post-id"
+                 th:text="'(Owner of the comment is ' + ${comment.user.username} + ' , User ID: ' + ${comment.user.id} + ' , Post ID: ' + ${comment.post.id} + ')'">
+            </div>
+            <div class="post-text" th:text="${comment.text}"></div>
         </div>
     </div>
 </div>
 
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const highlightedId = params.get('highlightedCommentId');
+        if (highlightedId) {
+            const el = document.getElementById('comment-' + highlightedId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('highlighted');
+                setTimeout(() => el.classList.remove('highlighted'), 3000);
+            }
+        }
+    });
+</script>
 </body>
 </html>

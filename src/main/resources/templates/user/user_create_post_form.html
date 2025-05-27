@@ -125,7 +125,7 @@
         <input type="hidden" th:field="*{id}">
 
         <div class="form-group">
-            <input type="text" th:field="*{title}" placeholder="Title (*)">
+            <input type="text" th:field="*{title}" placeholder="Title (*)" oninput="this.value = this.value.replaceAll('/', '')">
             <span class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
         </div>
 

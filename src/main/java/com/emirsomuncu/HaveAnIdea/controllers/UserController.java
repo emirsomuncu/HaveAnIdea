@@ -104,7 +104,7 @@ public class UserController {
     }
 
     @GetMapping("/user/user-posts")
-    public String usersPost(@RequestParam Long userId, Model model) {
+    public String usersPost(@RequestParam Long userId, Model model, @RequestParam(required = false) Long highlightedPostId) {
 
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = user.getUsername();
@@ -122,12 +122,13 @@ public class UserController {
         }
 
         model.addAttribute("postLikeCounts" , postLikeCounts);
+        model.addAttribute("highlightedPostId" , highlightedPostId);
         return "/user/user_desired_user_post";
     }
 
 
     @GetMapping("/user/user-comments")
-    public String usersComments(@RequestParam Long userId, Model model) {
+    public String usersComments(@RequestParam Long userId, Model model , @RequestParam(required = false) Long highlightedCommentId) {
 
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = user.getUsername();
@@ -137,6 +138,7 @@ public class UserController {
         List<GetDesiredUserCommentsByUserIdResponse> commentList = this.commentService.getDesiredUserCommentsByUserId(userId);
         model.addAttribute("commentList", commentList);
         model.addAttribute("userId" , userId);
+        model.addAttribute("highlightedCommentId" , highlightedCommentId);
 
         return "/user/user_desired_user_comments";
     }

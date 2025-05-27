@@ -2,6 +2,7 @@ package com.emirsomuncu.HaveAnIdea.entities;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
